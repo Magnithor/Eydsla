@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="2.0" xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en">
+  <file original="ng.template" id="ngi18n">
+    <unit id="4150330030790364157">
+      <notes>
+        <note category="location">app/app.component.ts:5</note>
+      </notes>
+      <segment>
+        <source>Hello i18n!</source>
+		 <target>Quetzal</target>
+      </segment>
+    </unit>
+    <unit id="TravelNameHint">
+      <notes>
+        <note category="location">app/component/travel/travel.component.ts:5</note>
+      </notes>
+      <segment>
+        <source>Name of the travel.</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>
