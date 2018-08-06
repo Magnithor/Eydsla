@@ -5,6 +5,7 @@ import { TravelComponent } from './component/travel/travel.component';
 
 const routes: Routes = [
   { path: '', component: MainComponent},
+  { path: 'EditTravel/:id', component: TravelComponent},
   { path: 'EditTravel', component: TravelComponent},
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

@@ -9,13 +9,15 @@ import { environment } from '../environments/environment';
 import { NavComponent } from './component/nav-menu/nav-menu.component';
 import { MainComponent } from './component/main/main.component';
 import { TravelComponent } from './component/travel/travel.component';
+import { AlertComponent } from './component/alert/alert.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     MainComponent,
-    TravelComponent
+    TravelComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,

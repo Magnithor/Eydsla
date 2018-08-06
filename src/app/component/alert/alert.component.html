@@ -1,0 +1,6 @@
+<div *ngIf="showing"  class="alert alert-primary" style="margin-top: 10px;" role="alert">
+    <button *ngIf="showCloseBtn" type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <span> {{text}}  </span>
+</div>

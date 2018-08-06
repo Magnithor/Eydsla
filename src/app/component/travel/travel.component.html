@@ -1,7 +1,19 @@
 <form>
     <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Enter name">
+        <input [(ngModel)]="travel.name" type="text" class="form-control" name="name" id="name" aria-describedby="emailHelp" placeholder="Enter name">
         <small id="nameHelp" class="form-text text-muted" i18n="@@TravelNameHint">Name of the travel.</small>
-      </div>
+    </div>
+    <div class="form-group">
+        <label for="dateFrom">Frá</label>
+        <input [ngModel]="travel.from | date:'yyyy-MM-dd'" (ngModelChange)="travel.from = $event" type="date" class="form-control" name="from" id="dateFrom" aria-describedat="dateFromHelp" placeholder="Date from">
+        <small id="dateFromHelp" class="form-text text-muted" i18n="@@TravelDateFromHint">Date from of the travel.</small>
+    </div>
+    <div class="form-group">
+        <label for="dateTo">To</label>
+        <input [ngModel]="travel.to | date:'yyyy-MM-dd'" type="date" class="form-control" name="to" id="dateTo" aria-describedat="dateToHelp" placeholder="Date to">
+        <small id="dateToHelp" class="form-text text-muted" i18n="@@TravelDatetToHint">Date to of the travel.</small>
+    </div>
+    <button type="button" class="btn btn-success" (click)="onSave()">Save</button>
+    <app-alert #alertSuccess></app-alert>
 </form>
