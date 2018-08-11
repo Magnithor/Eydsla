@@ -39,8 +39,14 @@ export class DatabaseService {
         const tx = conn.transaction('travel', 'readwrite' );
         const store = tx.objectStore('travel');
         const request = store.put(travel, IdToString(travel.id));
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
+        request.onsuccess = () => { 
+          this.logger.log(request.result);
+          resolve(request.result);
+        }
+        request.onerror = () => {
+          this.logger.error(request.error);
+          reject(request.error);
+        }
       });
     }
     finally {

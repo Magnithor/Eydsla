@@ -1,10 +1,18 @@
 import { IdToString, NewId } from "./id";
 
+export interface TravelCategory {
+    id: number,
+    name: string,
+    color: string
+}
+
 export interface Travel {
     id: string,
-    name:string,
+    name: string,
     from: Date,
-    to: Date
+    to: Date,
+    categoryMaxId: number,
+    category: TravelCategory[]
 }
 
 export function NewTravel(userId: number):Travel {
@@ -12,6 +20,8 @@ export function NewTravel(userId: number):Travel {
         id: IdToString(NewId(userId)),
         from: new Date(),
         to: new Date(),
-        name: ""    
+        name: "",
+        categoryMaxId: 0,
+        category: []    
     };
 }

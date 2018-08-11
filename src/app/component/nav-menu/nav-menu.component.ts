@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Travel } from '../../interface/travel';
 import { DatabaseService } from '../../service/database.service';
+import { TravelComponent } from '../travel/travel.component';
 
 @Component({
   selector: 'nav-menu',
@@ -21,11 +22,16 @@ export class NavComponent implements OnInit {
  //   console.log('get');
     return this._travelSelected;
   }
-  constructor(private db:DatabaseService ) { }
+  constructor(private db:DatabaseService) { }
 
   async ngOnInit() {
     this._travelSelected = await this.db.GetSettingItem('SelectTravel');
-    this.travels = await this.db.GetTravels();
+    const travels = await this.db.GetTravels();
+    travels.sort((a,b)=>b.from.getTime()-a.from.getTime());
+    this.travels = travels;
+    if (this._travelSelected === null && travels.length > 0) {
+      this.travelSelected = travels[0].id;      
+    }
   }
 
 }

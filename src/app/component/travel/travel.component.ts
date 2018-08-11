@@ -13,7 +13,9 @@ import { AlertComponent } from '../alert/alert.component';
 })
 export class TravelComponent implements OnInit {
 
-  @ViewChild('alertSuccess') alertSuccess: AlertComponent;
+  @ViewChild('alert') alert: AlertComponent;
+  @ViewChild('myForm') myForm;
+ 
 
   public travel: Travel;
   constructor(private route: ActivatedRoute, private log: LoggerService, private db: DatabaseService) { 
@@ -38,16 +40,25 @@ export class TravelComponent implements OnInit {
      //= NewTravel(1);
   }
 
+  UpdateDate(value) : Date {
+    return new Date(value);
+  }
+
+  AddCategory() {
+    this.travel.category.push( {id: this.travel.categoryMaxId, name:'', color:"red" });
+    this.travel.categoryMaxId++;
+  }
+
   ngOnInit() {
     this.travel = NewTravel(1);
-    let v = this;
-    setInterval(function(){console.log(v.travel.from.getDate());},10*1000);
+       
+   
   }
 
   async onSave() {
+    
    await this.db.AddOrUpdateTravel(this.travel); 
-   this.alertSuccess.text= "OK";
-   this.alertSuccess.show("test");
+   this.alert.show("Saved");
   }
 
 }

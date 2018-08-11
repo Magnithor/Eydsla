@@ -7,6 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class AlertComponent {
 
+  private timeoutHide;
   private _text = 'bla';
   private showing = false;
   private showCloseBtn = true;
@@ -25,10 +26,17 @@ export class AlertComponent {
   hide(){
     this.showing = false;
   }
-  show(value:string) {
+
+  show(value:string, timeoutInSec: number = 15) {
+    if (this.timeoutHide) {
+      clearTimeout(this.timeoutHide);
+      this.timeoutHide = null;
+    }
     this.text = value;
     this.showing = true;
-   // setTimeout(() => { this.hide()}, 5000);
+    if (!(timeoutInSec === null || timeoutInSec === undefined)) {
+      this.timeoutHide = setTimeout(() => { this.hide(); }, timeoutInSec * 1000);
+    }
   }
 
  }

@@ -1,19 +1,43 @@
-<form>
-    <div class="form-group">
-        <label for="name">Name</label>
-        <input [(ngModel)]="travel.name" type="text" class="form-control" name="name" id="name" aria-describedby="emailHelp" placeholder="Enter name">
-        <small id="nameHelp" class="form-text text-muted" i18n="@@TravelNameHint">Name of the travel.</small>
-    </div>
-    <div class="form-group">
-        <label for="dateFrom">Frá</label>
-        <input [ngModel]="travel.from | date:'yyyy-MM-dd'" (ngModelChange)="travel.from = $event" type="date" class="form-control" name="from" id="dateFrom" aria-describedat="dateFromHelp" placeholder="Date from">
-        <small id="dateFromHelp" class="form-text text-muted" i18n="@@TravelDateFromHint">Date from of the travel.</small>
-    </div>
-    <div class="form-group">
-        <label for="dateTo">To</label>
-        <input [ngModel]="travel.to | date:'yyyy-MM-dd'" type="date" class="form-control" name="to" id="dateTo" aria-describedat="dateToHelp" placeholder="Date to">
-        <small id="dateToHelp" class="form-text text-muted" i18n="@@TravelDatetToHint">Date to of the travel.</small>
-    </div>
-    <button type="button" class="btn btn-success" (click)="onSave()">Save</button>
-    <app-alert #alertSuccess></app-alert>
-</form>
+<div class="container-fluid">
+    <form class="form" #myForm>
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input [(ngModel)]="travel.name" type="text" class="form-control" name="name" id="name" aria-describedby="emailHelp" placeholder="Enter name">
+            <small #spy id="nameHelp" class="form-text text-muted" i18n="@@TravelNameHint">Name of the travel.</small>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="dateFrom">Frá</label>
+                <input [ngModel]="travel.from | date:'yyyy-MM-dd'" (ngModelChange)="travel.from = UpdateDate($event)" type="date" class="form-control" name="from" id="dateFrom" aria-describedat="dateFromHelp" placeholder="Date from">
+                <small id="dateFromHelp" class="form-text text-muted" i18n="@@TravelDateFromHint">Date from of the travel.</small>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="dateTo">To</label>
+                <input [ngModel]="travel.to | date:'yyyy-MM-dd'" (ngModelChange)="travel.to = UpdateDate($event)" type="date" class="form-control" name="to" id="dateTo" aria-describedat="dateToHelp" placeholder="Date to">
+                <small id="dateToHelp" class="form-text text-muted" i18n="@@TravelDatetToHint">Date to of the travel.</small>
+            </div>
+        </div>
+
+        <h2>Category</h2>
+        <div class="ml-4">
+            <Button (click)="AddCategory()">AddCategory</Button>
+            
+            <div *ngFor="let category of travel.category" class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="categoryName{{category.id}}">Name</label>
+                    <input [(ngModel)]="category.name" type="text" class="form-control" name="categroyName{{category.id}}" id="categoryName{{category.id}}" placeholder="Enter name">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="categoryColor{{category.id}}">Color</label>
+                    <input placeholder="fkk" [(ngModel)]="category.color" style="height: 38px;" type="color" class="form-control" name="categroyColor{{category.id}}" id="categoryColor{{category.id}}" placeholder="Enter color">
+                </div>
+            </div>
+        </div>
+
+
+        <button type="button" class="btn btn-success" (click)="onSave()">Save</button>
+        <app-alert #alert></app-alert>
+        
+<br>TODO: remove this: {{myForm.className}}
+    </form>
+</div>

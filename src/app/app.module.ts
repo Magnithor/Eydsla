@@ -10,6 +10,9 @@ import { NavComponent } from './component/nav-menu/nav-menu.component';
 import { MainComponent } from './component/main/main.component';
 import { TravelComponent } from './component/travel/travel.component';
 import { AlertComponent } from './component/alert/alert.component';
+import { TravelsComponent } from './component/travels/travels.component';
+import { BuyItemComponent } from './component/buy-item/buy-item.component';
+import { BuyItemsComponent } from './component/buy-items/buy-items.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +20,10 @@ import { AlertComponent } from './component/alert/alert.component';
     NavComponent,
     MainComponent,
     TravelComponent,
-    AlertComponent
+    AlertComponent,
+    TravelsComponent,
+    BuyItemComponent,
+    BuyItemsComponent
   ],
   imports: [
     BrowserModule,
