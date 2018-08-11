@@ -13,6 +13,7 @@ import { AlertComponent } from './component/alert/alert.component';
 import { TravelsComponent } from './component/travels/travels.component';
 import { BuyItemComponent } from './component/buy-item/buy-item.component';
 import { BuyItemsComponent } from './component/buy-items/buy-items.component';
+import { SyncComponent } from './component/sync/sync.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { BuyItemsComponent } from './component/buy-items/buy-items.component';
     AlertComponent,
     TravelsComponent,
     BuyItemComponent,
-    BuyItemsComponent
+    BuyItemsComponent,
+    SyncComponent
   ],
   imports: [
     BrowserModule,

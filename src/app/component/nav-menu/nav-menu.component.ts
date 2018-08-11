@@ -9,7 +9,7 @@ import { TravelComponent } from '../travel/travel.component';
   styleUrls: ['./nav-menu.component.css']
 })
 export class NavComponent implements OnInit {
-
+  public collapse = true;
   public travels: Travel[];
   public _travelSelected: string;
   @Input('travelSelected')
@@ -34,4 +34,11 @@ export class NavComponent implements OnInit {
     }
   }
 
+  public showHide() {
+    this.collapse = !this.collapse;
+  }
+
+  public hide() {
+    this.collapse = true;
+  }
 }

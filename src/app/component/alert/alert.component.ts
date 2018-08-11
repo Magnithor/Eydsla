@@ -9,7 +9,7 @@ export class AlertComponent {
 
   private timeoutHide;
   private _text = 'bla';
-  private showing = false;
+  public showing = false;
   private showCloseBtn = true;
  
   @Input()
