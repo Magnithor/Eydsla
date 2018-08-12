@@ -31,7 +31,11 @@ export class DatabaseService {
   //#endregion
 
   //#region Travel
-  public async AddOrUpdateTravel(travel: Travel) {   
+  public async AddOrUpdateTravel(travel: Travel, notUpdateNeedForSync?:boolean) {   
+    if (!notUpdateNeedForSync) {
+      travel.needToBeSync = true;
+    }
+
     let conn: IDBDatabase;
     try {
       conn = await this.OpenDb();

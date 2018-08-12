@@ -1,4 +1,5 @@
 import { IdToString, NewId } from "./id";
+import { Sync } from "./sync";
 
 export interface TravelCategory {
     id: number,
@@ -6,7 +7,7 @@ export interface TravelCategory {
     color: string
 }
 
-export interface Travel {
+export interface Travel extends Sync {
     id: string,
     name: string,
     from: Date,
@@ -22,6 +23,7 @@ export function NewTravel(userId: number):Travel {
         to: new Date(),
         name: "",
         categoryMaxId: 0,
-        category: []    
+        category: [],
+        needToBeSync: true  
     };
 }
