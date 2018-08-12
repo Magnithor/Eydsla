@@ -30,7 +30,7 @@ export class NavComponent implements OnInit {
     travels.sort((a,b)=>b.from.getTime()-a.from.getTime());
     this.travels = travels;
     if (this._travelSelected === null && travels.length > 0) {
-      this.travelSelected = travels[0].id;      
+      this.travelSelected = travels[0]._id;      
     }
   }
 

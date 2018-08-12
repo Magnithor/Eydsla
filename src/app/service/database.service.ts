@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LoggerService } from './logger.service';
-import { Travel } from './../interface/travel';
-import { Id, IdToString } from './../interface/id';
+import { Travel } from '../interface/travel';
 import { BuyItem } from '../interface/buy-item';
 
 @Injectable({
@@ -42,7 +41,7 @@ export class DatabaseService {
       await new Promise((resolve, reject) => {
         const tx = conn.transaction('travel', 'readwrite' );
         const store = tx.objectStore('travel');
-        const request = store.put(travel, IdToString(travel.id));
+        const request = store.put(travel, travel._id);
         request.onsuccess = () => { 
           this.logger.log(request.result);
           resolve(request.result);
@@ -86,14 +85,14 @@ export class DatabaseService {
     }
   }
 
-  public async GetTravel(id: Id | string):Promise<Travel | null> {
+  public async GetTravel(id: string):Promise<Travel | null> {
     let conn: IDBDatabase;
     try {
       conn = await this.OpenDb();
       return await new Promise<Travel>((resolve, reject) => {
         const tx = conn.transaction('travel', 'readonly' );
         const store = tx.objectStore('travel');
-        const request = store.get(IdToString(id));
+        const request = store.get(id);
         request.onsuccess = () => {
           if (request.result) {
             resolve(request.result);
@@ -119,7 +118,7 @@ export class DatabaseService {
       await new Promise((resolve, reject) => {
         const tx = conn.transaction('buyItem', 'readwrite' );
         const store = tx.objectStore('buyItem');
-        const request = store.put(buyItem, IdToString(buyItem.id));
+        const request = store.put(buyItem, buyItem._id);
         request.onsuccess = () => resolve(request.result);
         request.onerror = () => reject(request.error);
       });
@@ -129,7 +128,7 @@ export class DatabaseService {
     }
   };
 
-  public async GetBuyItemByTravelId(id:Id): Promise<BuyItem[]> {
+  public async GetBuyItemByTravelId(id:string): Promise<BuyItem[]> {
     let conn: IDBDatabase;
     try {
       conn = await this.OpenDb();
@@ -137,7 +136,7 @@ export class DatabaseService {
         const tx = conn.transaction('buyItem', 'readonly' );
         const store = tx.objectStore('buyItem');
         const travelId = store.index('travelId');
-        const request = travelId.openCursor(IdToString(id));
+        const request = travelId.openCursor(id);
         const arr: BuyItem[] = [];
         request.onsuccess = () => {
           let cursor = <IDBCursorWithValue> (request.result);
@@ -158,14 +157,14 @@ export class DatabaseService {
     }
   }
 
-  public async GetBuyItemById(id: Id | string):Promise<BuyItem | null> {
+  public async GetBuyItemById(id: string):Promise<BuyItem | null> {
     let conn: IDBDatabase;
     try {
       conn = await this.OpenDb();
       return await new Promise<BuyItem>((resolve, reject) => {
         const tx = conn.transaction('buyItem', 'readonly' );
         const store = tx.objectStore('buyItem');
-        const request = store.get(IdToString(id));
+        const request = store.get(id);
         request.onsuccess = () => {
           if (request.result) {
             resolve(request.result);

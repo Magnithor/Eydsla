@@ -27,9 +27,9 @@ export class SyncService {
       {travel:travelData});
     
     this.logger.log(httpData);
-    for (i=0; i < httpData.travel.length; i++)
+    for (i=0; i < httpData.travels.length; i++)
     {
-      await this.db.AddOrUpdateTravel(httpData.travel[i], true);
+      await this.db.AddOrUpdateTravel(httpData.travels[i], true);
     };
   }
 

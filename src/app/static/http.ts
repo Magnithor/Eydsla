@@ -17,7 +17,7 @@ export function http(url:string, data):Promise<any> {
 
         if (!(data === undefined || data === null)) 
         {
-            xhr.send(data)
+            xhr.send(JSON.stringify(data))
         } else {
             xhr.send();
         }

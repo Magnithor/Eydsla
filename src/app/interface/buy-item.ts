@@ -1,7 +1,5 @@
-import { Id } from './id';
-
 export interface BuyItem {
-    id: string,
+    _id: string,
     travelId: string,
     date: Date,
     caption: string,

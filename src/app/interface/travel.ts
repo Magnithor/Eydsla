@@ -1,4 +1,4 @@
-import { IdToString, NewId } from "./id";
+import { NewId } from "../static/id";
 import { Sync } from "./sync";
 
 export interface TravelCategory {
@@ -8,7 +8,7 @@ export interface TravelCategory {
 }
 
 export interface Travel extends Sync {
-    id: string,
+    _id: string,
     name: string,
     from: Date,
     to: Date,
@@ -18,7 +18,7 @@ export interface Travel extends Sync {
 
 export function NewTravel(userId: number):Travel {
     return {
-        id: IdToString(NewId(userId)),
+        _id: NewId(),
         from: new Date(),
         to: new Date(),
         name: "",

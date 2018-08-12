@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from '../../service/database.service';
 import { Travel } from '../../interface/travel';
-import { Id, NewId, IdToString } from '../../interface/id';
+import { NewId} from '../../static/id';
 import { BuyItem } from '../../interface/buy-item';
 
 @Component({
