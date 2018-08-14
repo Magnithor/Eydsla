@@ -23,7 +23,7 @@ export class SyncService {
     const travelData = this.ToOnlySyncArray(await this.db.GetTravels());
     // get all
     
-    var httpData = await http("http://eydsla.strumpur.net/sync.php", 
+    var httpData = await http("https://eydsla.strumpur.net/sync.php", 
       {travel:travelData});
     
     this.logger.log(httpData);
