@@ -30,7 +30,7 @@
             $filter = [ '$and' => array( [ '_id' => [ '$nin'  => $ids ]] )]; 
         }
 
-        print_r($filter);
+        //print_r($filter);
 
         $query = new MongoDB\Driver\Query($filter);  
         $res = $mng->executeQuery("eydsla.".$table, $query); 

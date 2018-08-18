@@ -12,6 +12,14 @@
       ]
     }
   }, {
+    "name":"sync",
+    "updateMode":"prefetch",
+    "resources":{
+      "files":[
+        "/sync.php"
+      ]
+    }
+  }, {
     "name": "assets",
     "installMode": "lazy",
     "updateMode": "prefetch",
