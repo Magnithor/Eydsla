@@ -1,3 +1,22 @@
-<p>
-  buy-item works!
-</p>
+<div class="container-fluid">
+    <form class="form" #myForm>
+
+        <div class="form-group">
+            <label for="caption">caption</label>
+            <input [(ngModel)]="buyItem.caption" type="text" class="form-control" name="caption" id="caption" aria-describedby="captionHelp" placeholder="Enter caption">
+            <small #spy id="captionHelp" class="form-text text-muted" i18n="@@BuyItemCaptionHint">Caption of the item.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="price">price</label>
+            <input [(ngModel)]="buyItem.price" type="number" class="form-control" name="price" id="price" aria-describedby="priceHelp" placeholder="Enter price">
+            <small #spy id="priceHelp" class="form-text text-muted" i18n="@@BuyItemPriceHint">Caption of the item.</small>
+        </div>
+          
+
+      <button type="button" class="btn btn-success" (click)="onSave()">Save</button>
+      <app-alert #alert></app-alert>
+      
+      <br>TODO: remove this: {{myForm.className}}
+    </form>
+</div>

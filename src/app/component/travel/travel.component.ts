@@ -28,16 +28,6 @@ export class TravelComponent implements OnInit {
         this.travel = NewTravel(1);
       }
     });
-    /*
-    pipe(
-      switchMap((params: ParamMap) => {
-        NewTravel( parseInt(params.get('id'))) 
-       
-      }
-      )
-       //this.service.getHero(params.get('id')))
-    );*/
-     //= NewTravel(1);
   }
 
   UpdateDate(value) : Date {
@@ -50,9 +40,7 @@ export class TravelComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.travel = NewTravel(1);
-       
-   
+    this.travel = NewTravel(1);      
   }
 
   async onSave() {

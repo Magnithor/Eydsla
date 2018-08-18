@@ -111,7 +111,10 @@ export class DatabaseService {
   //#endregion
 
   //#region BuyItem
-  public async AddOrUpdateBuyItem(buyItem: BuyItem) {
+  public async AddOrUpdateBuyItem(buyItem: BuyItem, notUpdateNeedForSync?:boolean) {   
+    if (!notUpdateNeedForSync) {
+      buyItem.needToBeSync = true;
+    }
     let conn: IDBDatabase;
     try {
       conn = await this.OpenDb();
@@ -127,6 +130,34 @@ export class DatabaseService {
       if (conn) { conn.close(); }
     }
   };
+
+  public async GetBuyItems(): Promise<BuyItem[]> {
+    let conn: IDBDatabase;
+    try {
+      conn = await this.OpenDb();
+      return await new Promise<BuyItem[]>((resolve, reject) => {
+        const tx = conn.transaction('buyItem', 'readonly' );
+        const store = tx.objectStore('buyItem');
+        const request = store.openCursor();
+        const arr = [];
+        request.onsuccess = () => {
+          let cursor = <IDBCursorWithValue> (request.result);
+          if (!cursor) {
+            resolve(arr);
+            return;
+          }
+
+          arr.push(cursor.value);
+          cursor.continue();
+        }
+
+        request.onerror = () => reject(request.error);
+      });
+    }
+    finally {
+      if (conn) { conn.close(); }
+    }
+  }
 
   public async GetBuyItemByTravelId(id:string): Promise<BuyItem[]> {
     let conn: IDBDatabase;
