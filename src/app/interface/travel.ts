@@ -1,5 +1,6 @@
 import { NewId } from "../static/id";
 import { Sync } from "./sync";
+import { CurrencyDefault } from  "./currency";
 
 export interface TravelCategory {
     id: number,
@@ -13,7 +14,8 @@ export interface Travel extends Sync {
     from: Date,
     to: Date,
     categoryMaxId: number,
-    category: TravelCategory[]
+    currencies: CurrencyDefault[],
+    categories: TravelCategory[]
 }
 
 export function NewTravel(userId: number):Travel {
@@ -23,7 +25,8 @@ export function NewTravel(userId: number):Travel {
         to: new Date(),
         name: "",
         categoryMaxId: 0,
-        category: [],
+        categories: [],
+        currencies: [{id:"ISK", trade:1}],
         needToBeSync: true  
     };
 }

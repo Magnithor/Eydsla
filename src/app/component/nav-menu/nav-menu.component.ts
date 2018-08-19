@@ -25,10 +25,10 @@ export class NavComponent implements OnInit {
   constructor(private db:DatabaseService) { }
 
   async ngOnInit() {
-    this._travelSelected = await this.db.GetSettingItem('SelectTravel');
     const travels = await this.db.GetTravels();
     travels.sort((a,b)=>b.from.getTime()-a.from.getTime());
     this.travels = travels;
+    this._travelSelected = await this.db.GetSettingItem('SelectTravel');
     if (this._travelSelected === null && travels.length > 0) {
       this.travelSelected = travels[0]._id;      
     }

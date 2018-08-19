@@ -22,18 +22,34 @@
         <div class="ml-4">
             <Button (click)="AddCategory()">AddCategory</Button>
             
-            <div *ngFor="let category of travel.category" class="form-row">
+            <div *ngFor="let category of travel.categories" class="form-row">
                 <div class="form-group col-md-6">
                     <label for="categoryName{{category.id}}">Name</label>
                     <input [(ngModel)]="category.name" type="text" class="form-control" name="categroyName{{category.id}}" id="categoryName{{category.id}}" placeholder="Enter name">
                 </div>
                 <div class="form-group col-md-6">
                     <label for="categoryColor{{category.id}}">Color</label>
-                    <input placeholder="fkk" [(ngModel)]="category.color" style="height: 38px;" type="color" class="form-control" name="categroyColor{{category.id}}" id="categoryColor{{category.id}}" placeholder="Enter color">
+                    <input [(ngModel)]="category.color" style="height: 38px;" type="color" class="form-control" name="categroyColor{{category.id}}" id="categoryColor{{category.id}}" placeholder="Enter color">
                 </div>
             </div>
         </div>
 
+        <h2>Currency</h2>
+        <div class="ml-4">
+            <select #currency><option *ngFor="let currency of filterCurrencies" value="{{currency.id}}">{{currency.id}} - {{currency.describe}}</option>></select> 
+            <button style="margin-left: 10px;" (click)="AddCurrency()">AddCurrency</button>
+            <table class="table" >
+                <tr><th>Gjaldmiðil</th><th>Gengi</th></tr>
+                <tr *ngFor="let currency of travel.currencies">
+                    <td>
+                        {{currency.id}}
+                    </td>
+                    <td>
+                        <input [(ngModel)]="currency.trade" name="currency_{{currency.id}}" type="number" class="form-control"  >
+                    </td>
+                </tr>
+            </table>
+        </div>
 
         <button type="button" class="btn btn-success" (click)="onSave()">Save</button>
         <app-alert #alert></app-alert>

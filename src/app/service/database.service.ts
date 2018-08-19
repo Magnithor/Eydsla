@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { LoggerService } from './logger.service';
 import { Travel } from '../interface/travel';
 import { BuyItem } from '../interface/buy-item';
+import { Currency } from '../interface/currency';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,17 @@ export class DatabaseService {
     });
   };
   //#endregion
+
+  public GetCurrencies() :Currency[] {
+    // https://en.wikipedia.org/wiki/ISO_4217
+    return [
+      { id:'ISK', describe: 'Íslenskar krónur'},
+      { id:'DKK', describe:'Danskar króur'},
+      { id:'CAD', describe:'$ canada'},
+      { id:'SEK', describe:'Sænskar króur'},
+      { id:'USD', describe:'$ US'}
+     ]
+  }
 
   //#region Travel
   public async AddOrUpdateTravel(travel: Travel, notUpdateNeedForSync?:boolean) {   
@@ -97,8 +109,6 @@ export class DatabaseService {
           if (request.result) {
             resolve(request.result);
           }
-
-          resolve(null);
         }
 
         request.onerror = () => reject(request.error);

@@ -8,6 +8,7 @@ export interface BuyItem extends Sync {
     caption: string,
     currency,
     price: number
+    category?: number;
 }
 
 export function NewBuyItem(travelId: string, userId: number) : BuyItem {

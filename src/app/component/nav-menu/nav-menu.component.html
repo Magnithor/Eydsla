@@ -28,7 +28,7 @@
     </ul>
     <form class="form-inline my-2 my-lg-1 mr-sm-2">
       <select class="form-control" [(ngModel)]="travelSelected" name="TravelSel">
-        <option *ngFor="let travel of travels" [ngValue]="travel.id">{{travel.name}}</option>
+        <option *ngFor="let travel of travels" [ngValue]="travel._id">{{travel.name}}</option>
       </select>
     </form>
     <form class="form-inline my-2 my-lg-0">
