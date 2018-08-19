@@ -16,7 +16,7 @@ export class TravelComponent implements OnInit {
 
   @ViewChild('alert') alert: AlertComponent;
   @ViewChild('myForm') myForm;
-  @ViewChild('currency') selectCurrency: HTMLSelectElement;
+  @ViewChild('currency') selectCurrency;
  
   public currencies: Currency[];
   public filterCurrencies:Currency[];
@@ -48,9 +48,6 @@ export class TravelComponent implements OnInit {
 
   AddCurrency() {
     if (this.selectCurrency.nativeElement.value) {
-      if (this.travel.currencies === undefined) {
-        this.travel.currencies=[];
-      }
       this.travel.currencies.push({id:this.selectCurrency.nativeElement.value, trade:1});
       this.Filter();
     }
