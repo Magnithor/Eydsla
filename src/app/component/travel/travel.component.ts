@@ -28,9 +28,9 @@ export class TravelComponent implements OnInit {
     this.route.paramMap.subscribe(async parm => { 
       if (parm.has("id")) {
         this.travel = await this.db.GetTravel(parm.get('id'));
-        this.Filter();
-      this.log.warn(parm.get("id")); }
-      else {
+        this.Filter();     
+        this.log.warn(parm.get("id"));
+      } else {
         this.travel = NewTravel(1);
         this.Filter();        
       }
@@ -42,6 +42,9 @@ export class TravelComponent implements OnInit {
   }
 
   AddCategory() {
+    if (!this.travel.categories) {
+      this.travel.categories = [];
+    }
     this.travel.categories.push( {id: this.travel.categoryMaxId, name:'', color:"red" });
     this.travel.categoryMaxId++;
   }

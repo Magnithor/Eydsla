@@ -13,14 +13,24 @@
             <small #spy id="priceHelp" class="form-text text-muted" i18n="@@BuyItemPriceHint">Caption of the item.</small>
         </div>
           
-        <div class="form-group">
-            <label for="currency">Currency</label>
-            <select [(ngModel)]="buyItem.currency" name="currency" id="currency" class="form-control">
-                <option *ngFor="let currency of travel?.currencies" [ngValue]="currency.id"> {{currency.id}} </option>
-            </select>
-            <small  id="priceHelp" class="form-text text-muted" i18n="@@BuyItemPriceHint">Caption of the item.</small>    
-        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="currency">Currency</label>
+                <select [(ngModel)]="buyItem.currency" name="currency" id="currency" class="form-control">
+                    <option *ngFor="let currency of travel?.currencies" [ngValue]="currency.id"> {{currency.id}} </option>
+                </select>
+                <small  id="priceHelp" class="form-text text-muted" i18n="@@BuyItemPriceHint">Caption of the item.</small>    
+            </div>
 
+            <div class="form-group col-md-6">
+                <label for="category">Category</label>
+                <select [(ngModel)]="buyItem.category" name="category" id="category" class="form-control">
+                    <option *ngFor="let category of travel?.categories" [ngValue]="category.id" [style.backgroundColor]="category.color" style="mix-blend-mode: difference">{{category.name}}</option>
+                </select>
+                <small  id="categoryHelp" class="form-text text-muted" i18n="@@BuyItemCategoryHint">Category of the item.</small>    
+            </div>
+
+        </div>
       <button type="button" class="btn btn-success" (click)="onSave()">Save</button>
       <app-alert #alert></app-alert>
       
