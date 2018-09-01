@@ -56,6 +56,18 @@ export class TravelComponent implements OnInit {
     }
   }
 
+  AddPerson() {
+    if (!this.travel.persons) {
+      this.travel.persons = [];
+    }
+    if (!this.travel.personMaxId) {
+      this.travel.personMaxId = 0;
+    }
+
+    this.travel.persons.push({id:this.travel.personMaxId, name:""});
+    this.travel.personMaxId++;
+  }
+
   Filter() {
     this.filterCurrencies = [];
     for (var i = 0; i < this.currencies.length; i++) {

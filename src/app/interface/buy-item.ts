@@ -1,15 +1,26 @@
 import { NewId } from "../static/id";
 import { Sync } from "./sync";
 
+export interface PersonSpentPrice {
+    personId: number,
+    price: number,
+   };
+
+export interface PersonSpentPercent {
+    personId: number,
+    percent: number
+   };
+      
 export interface BuyItem extends Sync {
     _id: string,
     travelId: string,
     date: Date,
     caption: string,
-    currency,
-    price: number
-    category?: number;
-}
+    currency: string,
+    price: number,
+    category?: number,
+    personsSpent?: (PersonSpentPrice | PersonSpentPercent)[]
+};
 
 export function NewBuyItem(travelId: string, userId: number) : BuyItem {
     return {
@@ -21,4 +32,4 @@ export function NewBuyItem(travelId: string, userId: number) : BuyItem {
         price: 0,
         needToBeSync: true
     };
-}
+};

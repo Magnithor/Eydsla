@@ -23,14 +23,58 @@
             </div>
 
             <div class="form-group col-md-6">
-                <label for="category">Category</label>
-                <select [(ngModel)]="buyItem.category" name="category" id="category" class="form-control">
+                <label for="category">Category <div style="width:10px;height:10px;display: inline-block;" [style.backgroundColor]="categoryColor"></div></label>
+                <select (change)="UpdateColor()" [(ngModel)]="buyItem.category" name="category" id="category" class="form-control">
                     <option *ngFor="let category of travel?.categories" [ngValue]="category.id" [style.backgroundColor]="category.color" style="mix-blend-mode: difference">{{category.name}}</option>
                 </select>
                 <small  id="categoryHelp" class="form-text text-muted" i18n="@@BuyItemCategoryHint">Category of the item.</small>    
             </div>
 
         </div>
+        <div id="accordion">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <button class="mt-auto btn btn-link" style="width:100%; text-align: left;" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Split between persons
+                    </button>
+                </div>
+            
+                <div id="collapseOne" class1="collapse" aria-labelledby="headingOne" >
+                    <div class="card-body">
+                        <div class="row" style="margin-bottom: 10px">
+                            <select class="col-md-3" #person>
+                                <option *ngFor="let person of filterPersons" value="{{person.id}}">{{person.name}}</option>
+                            </select> 
+                            <div class="col-md-3">
+                                <button (click)="AddPersonPrice(person.value)" class="btn btn-space" style="margin-right: 10px">Add Price</button> 
+                                <button (click)="AddPersonPercent(person.value)" class="btn btn-space">Add Percent</button>
+                            </div>
+                        </div>
+                        <div *ngFor="let item of buyItem.personsSpent" class="row">
+                            <div class="col">{{ getPersionFromId(item.personId) }}</div>
+                            <div class="col-md-5" *ngIf="item.price !== undefined">
+                                <input [(ngModel)]="item.price" type="number" name="price{{item.personId}}"  (change)="UpdatePersonValues()" class="form-control"/> 
+                            </div>
+                            <div class="col" *ngIf="item.price !== undefined">
+                                Spent
+                            </div>
+                            <div class="col-md-5" *ngIf="item.percent !== undefined">
+                                <input [(ngModel)]="item.percent" type="number" name="percent{{item.personId}}" (change)="UpdatePersonValues()" class="form-control"/>                           
+                            </div>
+                            <div class="col" *ngIf="item.percent !== undefined">%</div>
+                        </div>
+                        <hr>
+                        <table style="margin:0px">
+                            <tr><td>Total</td><td style="text-align: right">{{buyItem.price | number: '0.2'}}</td></tr>
+                            <tr><td>% sum</td><td style="text-align: right">{{precentPersonSum | number: '0.2'}}</td><td>-</td></tr>
+                            <tr><td>sum</td><td style="text-align: right">{{pricePersonSum | number: '0.2'}}</td><td>-</td></tr>
+                            <tr style="border-top: 1px solid gray"><td>Rest</td><td>{{personSum | number: '0.2'}}</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
       <button type="button" class="btn btn-success" (click)="onSave()">Save</button>
       <app-alert #alert></app-alert>
       

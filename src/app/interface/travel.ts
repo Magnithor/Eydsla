@@ -8,6 +8,11 @@ export interface TravelCategory {
     color: string
 }
 
+export interface TravelPerson {
+    id: number,
+    name: string
+}
+
 export interface Travel extends Sync {
     _id: string,
     name: string,
@@ -15,7 +20,9 @@ export interface Travel extends Sync {
     to: Date,
     categoryMaxId: number,
     currencies: CurrencyDefault[],
-    categories: TravelCategory[]
+    categories: TravelCategory[],
+    personMaxId: number,
+    persons: TravelPerson[]
 }
 
 export function NewTravel(userId: number):Travel {
@@ -27,6 +34,8 @@ export function NewTravel(userId: number):Travel {
         categoryMaxId: 0,
         categories: [],
         currencies: [{id:"ISK", trade:1}],
-        needToBeSync: true  
+        personMaxId: 0,
+        persons: [],
+        needToBeSync: true 
     };
 }
