@@ -3,13 +3,14 @@ import { LoggerService } from './logger.service';
 import { Travel } from '../interface/travel';
 import { BuyItem } from '../interface/buy-item';
 import { Currency } from '../interface/currency';
+import { MessageService, Message, MessageType } from './message.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DatabaseService {
 
-  constructor(private logger: LoggerService) { }
+  constructor(private logger: LoggerService,  private messageService: MessageService) { }
 
   //#region OpenDb and update if need
   private OpenDb(): Promise<IDBDatabase> {
@@ -57,6 +58,9 @@ export class DatabaseService {
         request.onsuccess = () => { 
           this.logger.log(request.result);
           resolve(request.result);
+          if (!notUpdateNeedForSync){
+            this.messageService.sendMessage({type: MessageType.travel, id: travel._id})
+          }
         }
         request.onerror = () => {
           this.logger.error(request.error);
@@ -157,7 +161,7 @@ export class DatabaseService {
             return;
           }
 
-          arr.push(cursor.value);
+          arr.push(this.fixBuyItem(cursor.value));
           cursor.continue();
         }
 
@@ -167,6 +171,14 @@ export class DatabaseService {
     finally {
       if (conn) { conn.close(); }
     }
+  }
+  fixBuyItem(value: BuyItem): BuyItem {
+    if (value) {
+      if (typeof(value.date) === "string") {
+        value.date = new Date(value.date);
+      }
+    }
+    return value;
   }
 
   public async GetBuyItemByTravelId(id:string): Promise<BuyItem[]> {
@@ -186,7 +198,7 @@ export class DatabaseService {
             return;
           }
 
-          arr.push(cursor.value);
+          arr.push(this.fixBuyItem(cursor.value));
           cursor.continue();
         }
 
@@ -208,7 +220,7 @@ export class DatabaseService {
         const request = store.get(id);
         request.onsuccess = () => {
           if (request.result) {
-            resolve(request.result);
+            resolve(this.fixBuyItem(request.result));
           }
 
           resolve(null);

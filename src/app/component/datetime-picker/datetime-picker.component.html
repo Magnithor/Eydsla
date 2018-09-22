@@ -1,0 +1,27 @@
+<div class="input-group" style="position: relative;">
+    <input #dateInput class="form-control input-sm" [class.is-invalid]="inputHasError" (input)="EditInput()"/>
+    <div class="input-group-append input-group-btn">
+      <button class="fa fa-calendar" (click)="togglePopup()" #popupButton></button>
+    </div>
+    <div #popup class="DateTimePickerPopup" *ngIf="isPopupOpen" tapindex="0" contentEditable="true" (focusout)="DateTimeFocusOut($event)">
+        <table class="DateTimePickerTable">
+          <tr>
+            <td class="DateTimePickerPrev"  (click)="prevMonth()">&lt;</td>
+            <td class="DateTimePickerTitle" colspan="5">{{monthCaption}}</td>
+            <td class="DateTimePickerNext" (click)="nextMonth()">&gt;</td></tr>
+          <tr><td class="DateTimePickerWeekDay">Sun</td><td class="DateTimePickerWeekDay">Mán</td><td class="DateTimePickerWeekDay">Þri</td><td class="DateTimePickerWeekDay">Mið</td><td class="DateTimePickerWeekDay">Fim</td><td class="DateTimePickerWeekDay">Fös</td><td class="DateTimePickerWeekDay">Lau</td></tr>
+          <tr *ngFor="let dr of dateRow">
+            <td *ngFor="let dt of dr.days" [ngClass]="dt.c"(click)="SetDate(dt.s)">{{dt.d}}</td>
+          </tr>
+        </table>
+        <div class="DateTimePickerTime">
+          <div class="DateTimePickerTimeEdit">
+            <input #eh class="DateTimePickerEditHour" (focus)="changeTimeState(true)" (input)="timeBoxChangeHour($event)">
+            <span>:</span>
+            <input #em class="DateTimePickerEditMin" (focus)="changeTimeState(false)" (input)="timeBoxChangeMin($event)">
+          </div>
+          <canvas #clockCanvas height="340" width="340" style="width: 170px; height: 170px; cursor: pointer;" (click)="timeClick($event)">
+          </canvas>
+        </div>
+    </div>
+</div>

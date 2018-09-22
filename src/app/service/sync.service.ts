@@ -4,6 +4,7 @@ import { DatabaseService } from './database.service';
 import { LoggerService } from './logger.service';
 import { http } from '../static/http';
 import { Sync } from '../interface/sync';
+import { MessageService, Message, MessageType } from './message.service';
 
 interface SyncData {
   hasChanged : Sync[],
@@ -17,7 +18,7 @@ export class SyncService {
   syncSteps:number = 0;
   syncStepsMax:number=3;
 
-  constructor(private logger: LoggerService, private db: DatabaseService) 
+  constructor(private logger: LoggerService, private db: DatabaseService,  private messageService: MessageService) 
   { 
   }
 
@@ -53,6 +54,7 @@ export class SyncService {
     }
     doSend(p++);
 
+    this.messageService.sendMessage({type : MessageType.sync})
   }
 
   private ToOnlySyncArray(data: Sync[]):SyncData{

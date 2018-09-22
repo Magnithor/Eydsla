@@ -14,6 +14,7 @@ import { TravelsComponent } from './component/travels/travels.component';
 import { BuyItemComponent } from './component/buy-item/buy-item.component';
 import { BuyItemsComponent } from './component/buy-items/buy-items.component';
 import { SyncComponent } from './component/sync/sync.component';
+import { DatetimePickerComponent } from './component/datetime-picker/datetime-picker.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { SyncComponent } from './component/sync/sync.component';
     TravelsComponent,
     BuyItemComponent,
     BuyItemsComponent,
-    SyncComponent
+    SyncComponent,
+    DatetimePickerComponent
   ],
   imports: [
     BrowserModule,

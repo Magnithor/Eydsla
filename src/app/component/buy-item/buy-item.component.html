@@ -1,6 +1,8 @@
 <div class="container-fluid">
     <form class="form" #myForm>
 
+        <app-datetime-picker></app-datetime-picker>
+
         <div class="form-group">
             <label for="caption">caption</label>
             <input [(ngModel)]="buyItem.caption" type="text" class="form-control" name="caption" id="caption" aria-describedby="captionHelp" placeholder="Enter caption">
@@ -11,6 +13,12 @@
             <label for="price">price</label>
             <input [(ngModel)]="buyItem.price" type="number" class="form-control" name="price" id="price" aria-describedby="priceHelp" placeholder="Enter price">
             <small #spy id="priceHelp" class="form-text text-muted" i18n="@@BuyItemPriceHint">Caption of the item.</small>
+        </div>
+
+        <div class="form-group">
+                <label for="date">date</label>
+                <input [(ngModel)]="buyItem.date" type="datetime-local" class="form-control" name="date" id="date" aria-describedby="dateHelp">
+                <small #spy id="dateHelp" class="form-text text-muted" i18n="@@BuyItemDateHint">Caption of the item.</small>    
         </div>
           
         <div class="form-row">
@@ -50,25 +58,28 @@
                                 <button (click)="AddPersonPercent(person.value)" class="btn btn-space">Add Percent</button>
                             </div>
                         </div>
-                        <div *ngFor="let item of buyItem.personsSpent" class="row">
-                            <div class="col">{{ getPersionFromId(item.personId) }}</div>
-                            <div class="col-md-5" *ngIf="item.price !== undefined">
-                                <input [(ngModel)]="item.price" type="number" name="price{{item.personId}}"  (change)="UpdatePersonValues()" class="form-control"/> 
-                            </div>
-                            <div class="col" *ngIf="item.price !== undefined">
-                                Spent
-                            </div>
-                            <div class="col-md-5" *ngIf="item.percent !== undefined">
-                                <input [(ngModel)]="item.percent" type="number" name="percent{{item.personId}}" (change)="UpdatePersonValues()" class="form-control"/>                           
-                            </div>
-                            <div class="col" *ngIf="item.percent !== undefined">%</div>
-                        </div>
+                        <table>                            
+                            <tr><th>Nafn</th><th class="tableV">Gildi</th><th>Tegund</th></tr>
+                            <tr *ngFor="let item of buyItem.personsSpent" >
+                                <td>{{ getPersionFromId(item.personId) }}</td>
+                                <td *ngIf="item.price !== undefined" class="tableV">
+                                    <input [(ngModel)]="item.price" type="number" name="price{{item.personId}}"  (change)="UpdatePersonValues()" class="form-control"/> 
+                                </td>
+                                <td *ngIf="item.price !== undefined">
+                                    Spent
+                                </td>
+                                <td *ngIf="item.percent !== undefined" class="tableV">
+                                    <input [(ngModel)]="item.percent" type="number" name="percent{{item.personId}}" (change)="UpdatePersonValues()" class="form-control"/>                           
+                                </td>
+                                <td *ngIf="item.percent !== undefined">%</td>
+                            </tr>
+                        </table>
                         <hr>
                         <table style="margin:0px">
-                            <tr><td>Total</td><td style="text-align: right">{{buyItem.price | number: '0.2'}}</td></tr>
-                            <tr><td>% sum</td><td style="text-align: right">{{precentPersonSum | number: '0.2'}}</td><td>-</td></tr>
-                            <tr><td>sum</td><td style="text-align: right">{{pricePersonSum | number: '0.2'}}</td><td>-</td></tr>
-                            <tr style="border-top: 1px solid gray"><td>Rest</td><td>{{personSum | number: '0.2'}}</td></tr>
+                            <tr><td>Total</td><td class="number">{{buyItem.price | number: '0.2'}}</td></tr>
+                            <tr><td>% sum</td><td class="number">{{precentPersonSum | number: '0.2'}}</td></tr>
+                            <tr><td>sum</td><td class="number">{{pricePersonSum | number: '0.2'}}</td></tr>
+                            <tr style="border-top: 1px solid gray"><td>Rest</td><td class="number">{{personSum | number: '0.2'}}</td></tr>
                         </table>
                     </div>
                 </div>

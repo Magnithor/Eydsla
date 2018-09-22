@@ -142,13 +142,13 @@ export class BuyItemComponent implements OnInit {
 
     if (percent > 0) { 
       percent = percent /100; 
-      this.precentPersonSum = (this.buyItem.price * percent);
+      this.precentPersonSum = -(this.buyItem.price * percent);
     } else {
       this.precentPersonSum = 0;
     }
-    this.pricePersonSum = price;
+    this.pricePersonSum = -price;
 
-    this.personSum = this.buyItem.price - this.precentPersonSum - this.pricePersonSum;
+    this.personSum = this.buyItem.price + this.precentPersonSum + this.pricePersonSum;
 
   }
 }

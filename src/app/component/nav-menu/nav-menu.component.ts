@@ -1,7 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Travel } from '../../interface/travel';
+import { Subscription } from 'rxjs';
 import { DatabaseService } from '../../service/database.service';
 import { TravelComponent } from '../travel/travel.component';
+import { MessageService, Message, MessageType } from '../../service/message.service';
 
 @Component({
   selector: 'nav-menu',
@@ -12,6 +14,8 @@ export class NavComponent implements OnInit {
   public collapse = true;
   public travels: Travel[];
   public _travelSelected: string;
+  private subscription: Subscription;
+
   @Input('travelSelected')
   public set travelSelected(value: string) {
     console.log('set ' + value);
@@ -22,16 +26,12 @@ export class NavComponent implements OnInit {
  //   console.log('get');
     return this._travelSelected;
   }
-  constructor(private db:DatabaseService) { }
+  constructor(private db:DatabaseService, private messageService: MessageService) {
+    this.subscription = this.messageService.getMessage().subscribe(msg => this.OnMessage(msg));
+   }
 
   async ngOnInit() {
-    const travels = await this.db.GetTravels();
-    travels.sort((a,b)=>b.from.getTime()-a.from.getTime());
-    this.travels = travels;
-    this._travelSelected = await this.db.GetSettingItem('SelectTravel');
-    if (this._travelSelected === null && travels.length > 0) {
-      this.travelSelected = travels[0]._id;      
-    }
+    await this.reReload();
   }
 
   public showHide() {
@@ -40,5 +40,26 @@ export class NavComponent implements OnInit {
 
   public hide() {
     this.collapse = true;
+  }
+
+  OnMessage(item:Message){
+    switch(item.type) {
+      case MessageType.travel:
+      case MessageType.sync:
+        this.reReload();
+      break;
+    }
+
+  }
+
+  async reReload() {
+    console.log('.');
+    const travels = await this.db.GetTravels();
+    travels.sort((a,b)=>b.from.getTime()-a.from.getTime());
+    this.travels = travels;
+    this._travelSelected = await this.db.GetSettingItem('SelectTravel');
+    if (this._travelSelected === null && travels.length > 0) {
+      this.travelSelected = travels[0]._id;      
+    }
   }
 }
