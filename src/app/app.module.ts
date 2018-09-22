@@ -15,6 +15,7 @@ import { BuyItemComponent } from './component/buy-item/buy-item.component';
 import { BuyItemsComponent } from './component/buy-items/buy-items.component';
 import { SyncComponent } from './component/sync/sync.component';
 import { DatetimePickerComponent } from './component/datetime-picker/datetime-picker.component';
+import { PieComponent } from './component/graph/pie/pie.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { DatetimePickerComponent } from './component/datetime-picker/datetime-pi
     BuyItemComponent,
     BuyItemsComponent,
     SyncComponent,
-    DatetimePickerComponent
+    DatetimePickerComponent,
+    PieComponent
   ],
   imports: [
     BrowserModule,

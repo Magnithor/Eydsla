@@ -37,9 +37,7 @@
 }
 .DateTimePickerEditHour{
     text-align:right;
-    width: 30px;
-    /* border: white; */
-    /* font-size: x-large; */
+    width: 35px;
     font-weight: 900;
     font-size: 17px;
     font-size: 24px;
@@ -48,7 +46,16 @@
     text-align: center;
     color: #999;
 }
-.DateTimePickerEditMin{text-align: right;      width: 30px;      /* border: white; */      /* font-size: x-large; */      font-weight: 900;      font-size: 17px;      font-size: 24px;font-weight: 600;      line-height: 30px;      text-align: center;      color: #999;}
+.DateTimePickerEditMin {
+    text-align: right;      
+    width: 35px;     
+    font-size: 17px;      
+    font-size: 24px;
+    font-weight: 600;      
+    line-height: 30px;      
+    text-align: center;      
+    color: #999;
+}
 .DateTimePickerWeekDay{
     width: 35px;
     font-weight: bold;

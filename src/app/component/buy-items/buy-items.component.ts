@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { DatabaseService } from '../../service/database.service';
 import { BuyItem } from '../../interface/buy-item';
 import { LoggerService } from '../../service/logger.service';
+import { Travel } from '../../interface/travel';
 
 @Component({
   selector: 'app-buy-items',
@@ -24,6 +25,7 @@ export class BuyItemsComponent implements OnInit {
   }
 
   data: BuyItem[];
+  categories;
 
   constructor(private db:DatabaseService, private log: LoggerService) { }
 
@@ -31,6 +33,11 @@ export class BuyItemsComponent implements OnInit {
   }
 
   async getTravelId(id) {
+    const travel = await this.db.GetTravel(id);
+    this.categories = [];
+    for (var i=0; i < travel.categories.length; i++){
+      this.categories[travel.categories[i].id] = travel.categories[i];
+    }
     const data  = await this.db.GetBuyItemByTravelId(id);
     data.sort((a,b)=> b.date.getTime() - a.date.getTime());
     this.data = data;
@@ -41,5 +48,27 @@ export class BuyItemsComponent implements OnInit {
     let i = str.indexOf('.');
     if (i == -1) { return ""; }
     return str.substr(i).replace('.',',');
+  }
+
+  dateToStr(value:Date): string {   
+    let v =         
+     ("0" + (value.getMonth()+1)).substr(-2) + "/"
+    + ("0" + value.getDate()).substr(-2) 
+    + " "
+    + ("0" + value.getHours()).substr(-2) + ":"
+    + ("0" + value.getMinutes()).substr(-2);
+
+    return v;   
+  }
+
+  categoryToStr(value){   
+    console.log(value); 
+    const v= this.categories[value]
+    if (!v) { return null; }
+    return  v.name;
+  }
+  empty(value){
+    if (!value) { return "[empty]"; }
+    return value;
   }
 }

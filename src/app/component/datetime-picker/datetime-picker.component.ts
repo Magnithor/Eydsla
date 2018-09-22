@@ -298,7 +298,7 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
       i = (i % mod) + inc;
     }
   }
-  private renderMin = function (ca:CanvasRenderingContext2D, c, s:number, r:number, eH:HTMLInputElement, eM:HTMLInputElement) {
+  private renderMin = function (ca:CanvasRenderingContext2D, c:HTMLCanvasElement, s:number, r:number, eH:HTMLInputElement, eM:HTMLInputElement) {
     var h = this.Value.getHours(),
       m = this.Value.getMinutes();
     eH.value = h < 10 ? ("0" + h) : h;
@@ -344,21 +344,15 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
     ca.restore();
   }
   private renderTime() {
-    let c = this.clockCanvas.nativeElement;
+    let c:HTMLCanvasElement = this.clockCanvas.nativeElement;
     let ca = c.getContext("2d");
-    let d = window.devicePixelRatio || 1;
-    let b = ca.webkitBackingStorePixelRatio ||
-      ca.mozBackingStorePixelRatio ||
-      ca.msBackingStorePixelRatio ||
-      ca.oBackingStorePixelRatio ||
-      ca.backingStorePixelRatio || 1;
-    let r = d / b;
+    let r = window.devicePixelRatio || 1;
     let s = 170;
     c.height = s * r;
     c.width = s * r;
     c.style.width = s + "px";
     c.style.height = s + "px";
-    s = s*r *0.5;
+    s = s * r * 0.5;
     if (this.timeState) {
       this.renderHour(ca, c, s, r, this.eh.nativeElement, this.em.nativeElement);
     } else {
