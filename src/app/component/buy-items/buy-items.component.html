@@ -2,12 +2,13 @@
   <a routerLink="/New/{{travelId}}">+</a>
     <table class="table-sm table-hover table-border">
       <thead>
-        <tr><th>Name</th><th>Date</th><th>Price</th></tr>
+        <tr><th>Name</th><th>Date</th><th colspan="2">Price</th></tr>
       </thead>
       <tr *ngFor="let item of data" >
         <td><a [routerLink]="['/EditBuyItem', item._id]" routera>{{item.caption}}</a></td> 
         <td>{{item.date | date}}</td>
-        <td>{{item.price}}</td>
+        <td style="text-align: right; padding-right: 0px;">{{Math.floor(item.price)}}</td>
+        <td style="padding-left: 0px;">{{getAfterDot(item.price)}}</td>
       </tr>
     </table>
   </div>

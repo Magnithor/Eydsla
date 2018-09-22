@@ -1,6 +1,6 @@
-import { Component, OnInit, AfterViewInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
 import { viewDef } from '@angular/core/src/view';
-import { exec } from 'child_process';
+
 
 @Component({
   selector: 'app-datetime-picker',
@@ -34,7 +34,8 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
     this.month = value.getMonth();
     this.updateDateInput();
     this.renderDates();
-  }
+  };
+  @Output() ValueChange = new EventEmitter();
 
   get Value(): Date {
     return this._value;
@@ -54,18 +55,30 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
   private timeState: boolean = true;
   private ca;
   constructor() {
-    this.Value = new Date(1979,0,13,15,18);
+    this.Value = new Date();
   }
 
   ngOnInit() { }
   ngAfterViewInit() { }
 
+  private updateValue(value:Date){
+    this._value = value;
+    this.year = value.getFullYear();
+    this.month = value.getMonth();
+    this.updateDateInput();
+    this.renderDates();
+    this.ValueChange.emit(this._value);
+    console.log("Update");
+  }
+  
   private updateDateInput() {    
     if (this.disapleUpdateDateInput) { return;}
     if (this.dateInput) {
+      const date = this.checkInput();
       const value = this.Value;
+      if (date && value.getTime() === date.getTime()) { return; }
       this.dateInput.nativeElement.value = 
-          ("0" + value.getMonth()+1).substr(-2) + "/"
+          ("0" + (value.getMonth()+1)).substr(-2) + "/"
         + ("0" + value.getDate()).substr(-2) + "/"
         + value.getFullYear() + " "
         + ("0" + value.getHours()).substr(-2) + ":"
@@ -87,17 +100,19 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
 }
 
   public DateTimeFocusOut(event) {
-    if (this.popupButton.nativeElement == event.relatedTarget){
+    console.log(event);
+    if (!event.relatedTarget || this.popupButton.nativeElement == event.relatedTarget){
       return;
     }
+    
     if (!this.checkParent(event.relatedTarget, this.popup.nativeElement)) {
+      console.log(event);
       this.isPopupOpen = false;
-      this.Value = this.Value;
       }
   }
+
   public togglePopup() {
     this.isPopupOpen = !this.isPopupOpen;
-    this.Value = this.Value;
   }
   
 
@@ -108,7 +123,7 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
   public SetDate(value: Date) {
     value.setHours(this.Value.getHours());
     value.setMinutes(this.Value.getMinutes());
-    this.Value = value;
+    this.updateValue(value);
     this.isPopupOpen = false;
   }
 
@@ -116,26 +131,25 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
     var value = this.dateInput.nativeElement.value;
     var arr = /^(\d\d?)[\/\. -]+(\d\d?)[\/\. -]+(\d\d(\d\d)?) +(\d\d?):(\d\d?)$/.exec(value);
     this.inputHasError = !arr;
-    return arr;
+    if (!arr) {return null;}
+    let year:number;
+    if (arr[4] == undefined) {
+      year = 2000+ parseInt(arr[3]);
+    } else {
+      year = parseInt(arr[3]);
+    }
+    return new Date(year, parseInt(arr[1])-1, parseInt(arr[2]), parseInt(arr[5]), parseInt(arr[6]))
   }
   
   public EditInput() {
-    var arr = this.checkInput();
-    console.log(arr);
-    if (arr != null){
-      let year:number;
-      if (arr[4] == undefined) {
-        year = 2000+ parseInt(arr[3]);
-      } else {
-        year = parseInt(arr[3]);
-      }
+    var date = this.checkInput();
+    console.log(date);
 
-      this.disapleUpdateDateInput = true;
-      try {
-        this.Value = new Date(year, parseInt(arr[1])-1, parseInt(arr[2]), parseInt(arr[5]), parseInt(arr[6]));
-      } finally {
-        this.disapleUpdateDateInput = false;
-      }
+    this.disapleUpdateDateInput = true;
+    try {
+      this.updateValue(date);
+    } finally {
+      this.disapleUpdateDateInput = false;
     }
   }
 
@@ -153,7 +167,7 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
     this.timeState = true;
     if (value == parseInt(value, 10)) {
       this.Value.setHours(value);
-      this.Value = this.Value;
+      this.updateValue(this.Value);
     }
 
     this.renderTime();
@@ -172,7 +186,7 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
     this.timeState = false;
     if (value == parseInt(value, 10)) {
       this.Value.setMinutes(value);
-      this.Value = this.Value;
+      this.updateValue(this.Value);
     }
 
     this.renderTime();
@@ -228,13 +242,13 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
         }
       }
 
-      this.Value = this.Value;
+      this.updateValue(this.Value);
       this.timeState = false;
       this.renderTime();
     } else { //Min
       if (55 < d && d < 78) {
         this.Value.setMinutes(m);
-        this.Value = this.Value;
+        this.updateValue(this.Value);
       }
 
       this.renderTime();
@@ -284,7 +298,7 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
       i = (i % mod) + inc;
     }
   }
-  private renderMin = function (ca, c, s, r, eH, eM) {
+  private renderMin = function (ca:CanvasRenderingContext2D, c, s:number, r:number, eH:HTMLInputElement, eM:HTMLInputElement) {
     var h = this.Value.getHours(),
       m = this.Value.getMinutes();
     eH.value = h < 10 ? ("0" + h) : h;
@@ -340,7 +354,11 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
       ca.backingStorePixelRatio || 1;
     let r = d / b;
     let s = 170;
-
+    c.height = s * r;
+    c.width = s * r;
+    c.style.width = s + "px";
+    c.style.height = s + "px";
+    s = s*r *0.5;
     if (this.timeState) {
       this.renderHour(ca, c, s, r, this.eh.nativeElement, this.em.nativeElement);
     } else {

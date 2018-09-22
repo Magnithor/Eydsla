@@ -3,7 +3,8 @@
     <div class="input-group-append input-group-btn">
       <button class="fa fa-calendar" (click)="togglePopup()" #popupButton></button>
     </div>
-    <div #popup class="DateTimePickerPopup" *ngIf="isPopupOpen" tapindex="0" contentEditable="true" (focusout)="DateTimeFocusOut($event)">
+
+    <div #popup class="DateTimePickerPopup" *ngIf="isPopupOpen" (focusout)="DateTimeFocusOut($event)">
         <table class="DateTimePickerTable">
           <tr>
             <td class="DateTimePickerPrev"  (click)="prevMonth()">&lt;</td>

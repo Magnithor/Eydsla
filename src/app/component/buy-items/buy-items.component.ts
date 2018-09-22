@@ -11,6 +11,7 @@ import { LoggerService } from '../../service/logger.service';
 export class BuyItemsComponent implements OnInit {
 
   private _travelId;
+  public Math = Math;
    
   @Input()
   set travelId(value: string) {
@@ -35,4 +36,10 @@ export class BuyItemsComponent implements OnInit {
     this.data = data;
   }
 
+  getAfterDot(value:number){
+    let str = value.toString();
+    let i = str.indexOf('.');
+    if (i == -1) { return ""; }
+    return str.substr(i).replace('.',',');
+  }
 }
