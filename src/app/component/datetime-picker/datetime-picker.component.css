@@ -159,7 +159,7 @@ input.DateTimePickerEditMin:focus {
     color: #428bca;
 }
 
-td.DateTimePickerDay.DateTimePickerSelectedDate {
+.DateTimePickerSelectedDate {
     background-color: #86C2E0;
     color: #ffffff;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);

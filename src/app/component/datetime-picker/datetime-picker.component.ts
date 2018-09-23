@@ -49,17 +49,39 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
 
   private monthName: string[] = ["Janúar", "Febrúar", "Mars", "Apríl", "Maí",
     "Júní", "Júlí", "Ágúst", "September", "Október", "Nóvember", "Desember"];
+  private monthNameShort: string[] = ["Jan", "Feb", "Mar", "Apr", "Maí", "Jún", "Júl", "Áug", "Sep", "Okt", "Nov", "Des"];
   private year: number;
   private month: number;
-  private monthCaption: string;
+  private monthCaption: string;  
   private timeState: boolean = true;
   private ca;
+  public Math = Math;
+
+  public showDay = true;
+  public showMonth = false;
+  public showYear = false;
+  public showTime = true;
   constructor() {
     this.Value = new Date();
   }
 
   ngOnInit() { }
   ngAfterViewInit() { }
+
+  public doShowMonth(){
+    this.showDay = false;
+    this.showMonth = true;
+    this.showTime = false;
+    this.showYear = false;
+  }  
+
+  public doShowYear(){
+    this.showDay = false;
+    this.showMonth = false;
+    this.showTime = false;
+    this.showYear = true;
+  }
+
 
   private updateValue(value:Date){
     this._value = value;
@@ -86,7 +108,7 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public checkParent(el, tag) {
+  public checkParent(el:Node, tag:Node) {
     if (el === tag) {
       return true;
     }
@@ -97,7 +119,7 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
             return true;
     }
     return false;
-}
+  }
 
   public DateTimeFocusOut(event) {
     console.log(event);
@@ -113,9 +135,14 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
 
   public togglePopup() {
     this.isPopupOpen = !this.isPopupOpen;
+    if (this.isPopupOpen){
+      this.showDay = true;
+      this.showMonth = false;
+      this.showTime = true;
+      this.showYear = false;
+    }
   }
   
-
   public changeTimeState(value: boolean) {
     this.timeState = value;
     this.renderTime();
@@ -125,6 +152,18 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
     value.setMinutes(this.Value.getMinutes());
     this.updateValue(value);
     this.isPopupOpen = false;
+  }
+  public monthClick(month) {
+    this.month = month;
+    this.renderDates();
+    this.showDay = true;
+    this.showMonth = false;
+    this.showTime = true;
+    this.showYear = false;
+  }
+  public yearClick(year){
+    this.year = year;
+    this.doShowMonth();
   }
 
   private checkInput() {
@@ -191,6 +230,14 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
 
     this.renderTime();
   }
+  public nextYear(){
+    this.year++;
+    this.renderDates();
+  }
+  public prevYear(){
+    this.year--;
+    this.renderDates();
+  }
 
   public nextMonth() {
     let s = new Date(this.year, this.month, 1);
@@ -254,7 +301,7 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
       this.renderTime();
     }
   }
-  private renderHour = function (ca, c, s, r, eH, eM) {
+  private renderHour = function (ca:CanvasRenderingContext2D, c:HTMLCanvasElement, s:number, r:number, eH:HTMLInputElement, eM:HTMLInputElement) {
     var h = this.Value.getHours(),
       m = this.Value.getMinutes();
     eH.value = h < 10 ? ("0" + h) : h;
@@ -285,11 +332,11 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
     this.renderNumberCircle(ca, s, 1, 0, 24, 67 * r, 12);
     this.renderNumberCircle(ca, s, 1, 12, 12, 44 * r);
   }
-  private renderNumberCircle = function (ca, s, inc, i, mod, r, firstAdd) {
-    var a, i, m, first = true;
-    a = 0;
+  private renderNumberCircle = function (ca:CanvasRenderingContext2D, s:number, inc:number, i:number, mod:number, r:number, firstAdd:number) {
+    let a:number = 0;
+    let first = true;    
     while (a < 2 * Math.PI) {
-      ca.fillText(i, s + r * Math.cos(a - 0.5 * Math.PI), s + r * Math.sin(a - 0.5 * Math.PI));
+      ca.fillText(i.toString(), s + r * Math.cos(a - 0.5 * Math.PI), s + r * Math.sin(a - 0.5 * Math.PI));
       a = a + (Math.PI * 2) / 12;
       if (first && firstAdd) {
         i += firstAdd;
@@ -322,10 +369,6 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
     this.renderSelectTime(ca, s, m * ((Math.PI * 2) / 60), 67 * r, r);
 
     this.renderNumberCircle(ca, s, 5, 60, 60, 67 * r);
-
-    /*if (this.updateDateOnSelect) {
-        setInput.call(this, {}, this.selectDate, false);
-    }*/
   }
   renderSelectTime = function (ca, s, i, r, h) {
     var x = s + r * Math.cos(i - 0.5 * Math.PI), y = s + r * Math.sin(i - 0.5 * Math.PI);

@@ -5,17 +5,50 @@
     </div>
 
     <div #popup class="DateTimePickerPopup" *ngIf="isPopupOpen" (focusout)="DateTimeFocusOut($event)">
-        <table class="DateTimePickerTable">
+        <table class="DateTimePickerTable" *ngIf="showDay">
           <tr>
             <td class="DateTimePickerPrev"  (click)="prevMonth()">&lt;</td>
-            <td class="DateTimePickerTitle" colspan="5">{{monthCaption}}</td>
-            <td class="DateTimePickerNext" (click)="nextMonth()">&gt;</td></tr>
+            <td class="DateTimePickerTitle" colspan="5" (click)="doShowMonth()">{{monthCaption}}</td>
+            <td class="DateTimePickerNext" (click)="nextMonth()">&gt;</td>
+          </tr>
           <tr><td class="DateTimePickerWeekDay">Sun</td><td class="DateTimePickerWeekDay">Mán</td><td class="DateTimePickerWeekDay">Þri</td><td class="DateTimePickerWeekDay">Mið</td><td class="DateTimePickerWeekDay">Fim</td><td class="DateTimePickerWeekDay">Fös</td><td class="DateTimePickerWeekDay">Lau</td></tr>
           <tr *ngFor="let dr of dateRow">
             <td *ngFor="let dt of dr.days" [ngClass]="dt.c"(click)="SetDate(dt.s)">{{dt.d}}</td>
           </tr>
         </table>
-        <div class="DateTimePickerTime">
+        <table class="DateTimePickerTable" *ngIf="showMonth">
+            <tr>
+              <td class="DateTimePickerPrev"  (click)="prevYear()">&lt;</td>
+              <td class="DateTimePickerTitle" colspan="2" (click)="doShowYear()">{{year}}</td>
+              <td class="DateTimePickerNext" (click)="nextYear()">&gt;</td>
+            </tr>
+            <tr *ngFor="let r of [0,1,2]">
+              <td *ngFor="let c of [0,1,2,3]" class="DateTimePickerMonth" (click)="monthClick(r*4+c)"
+              [ngClass]="{
+                'DateTimePickerSelectedDate':(r*4+c) === Value.getMonth() && year === Value.getFullYear(),
+                'DateTimePickerSelect':(r*4+c) !== Value.getMonth() && year === Value.getFullYear()
+              }"
+              >{{monthNameShort[r*4+c]}}</td>
+            </tr>    
+        </table>
+        <table class="DateTimePickerTable" *ngIf="showYear">
+            <tr>
+              <td class="DateTimePickerPrev"  (click)="prevYear()">&lt;</td>
+              <td class="DateTimePickerTitle" colspan="3">
+                  {{(Math.floor(year / 10) * 10 - 5)}} -
+                  {{(Math.floor(year / 10) * 10 - 5) + 20}} 
+              </td>
+              <td class="DateTimePickerNext" (click)="nextYear()">&gt;</td>
+            </tr>
+            <tr *ngFor="let r of [0,1,2,3]">
+              <td *ngFor="let c of [0,1,2,3,4]"  class="DateTimePickerMonth" (click)="yearClick((Math.floor(year / 10) * 10 - 5) + (r*4+c))"
+              [ngClass]="{
+                'DateTimePickerSelectedDate': ((Math.floor(year / 10) * 10 - 5) + (r*4+c)) === Value.getFullYear(),
+                'DateTimePickerSelect': ((Math.floor(year / 10) * 10 - 5) + (r*4+c)) !== Value.getFullYear()
+              }">{{((Math.floor(year / 10) * 10 - 5) + (r*4+c))}}</td>
+            </tr>
+        </table>
+        <div class="DateTimePickerTime" *ngIf="showTime">
           <div class="DateTimePickerTimeEdit">
             <input #eh class="DateTimePickerEditHour" (focus)="changeTimeState(true)" (input)="timeBoxChangeHour($event)">
             <span>:</span>

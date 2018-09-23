@@ -1,6 +1,7 @@
 import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import { DatabaseService } from '../../../service/database.service';
 import { TravelCategory } from '../../../interface/travel';
+import { updateConvasSize } from '../../../static/canvas';
 
 @Component({
   selector: 'app-pie',
@@ -30,7 +31,8 @@ export class PieComponent {
   public render() {
     const ctx = this.canvas.getContext("2d");
     
-    let r = window.devicePixelRatio || 1;
+    
+    let r = updateConvasSize(this.canvas, 200, 200);
     const w = this.canvas.width;
     const h = this.canvas.height;
     let w2 = w * 0.5;
