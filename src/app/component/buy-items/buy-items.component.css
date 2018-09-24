@@ -1,3 +1,7 @@
 th {
     text-align: center;
 }
+
+td {
+    vertical-align: top;
+}

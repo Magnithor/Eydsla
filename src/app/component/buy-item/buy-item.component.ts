@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { LoggerService } from '../../service/logger.service';
 import { DatabaseService } from '../../service/database.service';
 import { AlertComponent } from '../alert/alert.component';
+import { LocalStorageService } from '../../service/local-storage.service';
 
 @Component({
   selector: 'app-buy-item',
@@ -30,7 +31,7 @@ export class BuyItemComponent implements OnInit {
     return this._categoryColor;
   }
 
-  constructor(private route: ActivatedRoute, private log: LoggerService, private db: DatabaseService) { 
+  constructor(private route: ActivatedRoute, private log: LoggerService, private db: DatabaseService, private localStorageService: LocalStorageService) { 
     this.route.paramMap.subscribe(async parm => { 
       if (parm.has("id")) {
         let buyItem = await this.db.GetBuyItemById(parm.get('id'));
@@ -41,10 +42,12 @@ export class BuyItemComponent implements OnInit {
           let buyItem = NewBuyItem(parm.get("travelId"), 1);
           this.travel = await this.db.GetTravel(buyItem.travelId);
           this.buyItem = buyItem;
+          this.setDeafultCurrency();
         } else {
           let travelId = await this.db.GetSettingItem('SelectTravel');
           this.travel = await this.db.GetTravel(travelId);
           this.buyItem = NewBuyItem(travelId, 1);
+          this.setDeafultCurrency();          
         }
       }
 
@@ -57,9 +60,23 @@ export class BuyItemComponent implements OnInit {
   ngOnInit() {
     this.buyItem = NewBuyItem("1", 1);
   }
+  
+  setDeafultCurrency() {
+    let defaultCurrency = this.localStorageService.getValue("DefaultCurrency");
+    let found = false;
+    
+    for (var i = 0; i < this.travel.currencies.length; i++) {
+      if (this.travel.currencies[i].id === defaultCurrency){
+        found = true;
+        this.buyItem.currency = defaultCurrency;
+        break;
+      }
+    }
+  }
 
   async onSave() {    
     await this.db.AddOrUpdateBuyItem(this.buyItem); 
+    this.localStorageService.setValue("DefaultCurrency", this.buyItem.currency);
     this.alert.show("Saved");
   }
 

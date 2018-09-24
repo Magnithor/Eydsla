@@ -13,6 +13,7 @@ export class BuyItemsComponent implements OnInit {
 
   private _travelId;
   public Math = Math;
+  public config :{showCurrency:boolean};
    
   @Input()
   set travelId(value: string) {
@@ -27,7 +28,9 @@ export class BuyItemsComponent implements OnInit {
   data: BuyItem[];
   categories;
 
-  constructor(private db:DatabaseService, private log: LoggerService) { }
+  constructor(private db:DatabaseService, private log: LoggerService) { 
+    this.config = {showCurrency:false};
+  }
 
   ngOnInit() {
   }

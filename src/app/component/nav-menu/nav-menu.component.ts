@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { DatabaseService } from '../../service/database.service';
 import { TravelComponent } from '../travel/travel.component';
 import { MessageService, Message, MessageType } from '../../service/message.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'nav-menu',
@@ -26,8 +27,9 @@ export class NavComponent implements OnInit {
  //   console.log('get');
     return this._travelSelected;
   }
-  constructor(private db:DatabaseService, private messageService: MessageService) {
+  constructor(private db:DatabaseService, private messageService: MessageService, public router: Router) {
     this.subscription = this.messageService.getMessage().subscribe(msg => this.OnMessage(msg));
+    console.log(router);
    }
 
   async ngOnInit() {
