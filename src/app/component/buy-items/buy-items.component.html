@@ -4,13 +4,16 @@
       <thead>
         <tr><th>Name</th><th>Date</th><th>category</th><th colspan="2">Price</th><th *ngIf="config.showCurrency">Gengi</th></tr>
       </thead>
-      <tr *ngFor="let item of data" >
-        <td><a [routerLink]="['/EditBuyItem', item._id]" routera>{{empty(item.caption)}}</a></td> 
-        <td>{{dateToStr(item.date)}}</td>
-        <td>{{categoryToStr(item.category)}}</td>
-        <td style="text-align: right; padding-right: 0px;">{{Math.floor(item.price)}}</td>
-        <td style="padding-left: 0px;">{{getAfterDot(item.price)}}</td>
-        <td *ngIf="config.showCurrency">{{item.currency}}</td>
-      </tr>
     </table>
+      <cdk-virtual-scroll-viewport itemSize="20" autosize style="Height:150px">
+        <div *cdkVirtualFor="let item of data">
+          <div><a [routerLink]="['/EditBuyItem', item._id]" routera>{{empty(item.caption)}}</a></div> 
+          <div>{{dateToStr(item.date)}}</div>
+          <div>{{categoryToStr(item.category)}}</div>
+          <div style="text-align: right; padding-right: 0px;">{{Math.floor(item.price)}}</div>
+          <div style="padding-left: 0px;">{{getAfterDot(item.price)}}</div>
+          <div *ngIf="config.showCurrency">{{item.currency}}</div>
+        </div>
+      </cdk-virtual-scroll-viewport>
+    
   </div>

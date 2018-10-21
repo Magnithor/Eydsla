@@ -182,7 +182,7 @@ export class DatetimePickerComponent implements OnInit, AfterViewInit {
   
   public EditInput() {
     var date = this.checkInput();
-    console.log(date);
+    if (date === null) { return; }
 
     this.disapleUpdateDateInput = true;
     try {

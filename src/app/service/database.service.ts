@@ -197,8 +197,8 @@ export class DatabaseService {
             resolve(arr);
             return;
           }
-
-          arr.push(this.fixBuyItem(cursor.value));
+          for (var i = 0; i < 100; i++){
+          arr.push(this.fixBuyItem(cursor.value));}
           cursor.continue();
         }
 
