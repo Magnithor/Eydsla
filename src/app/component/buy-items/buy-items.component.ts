@@ -13,7 +13,7 @@ export class BuyItemsComponent implements OnInit {
 
   private _travelId;
   public Math = Math;
-  public config :{showCurrency:boolean};
+  public config: { showCurrency:boolean };
    
   @Input()
   set travelId(value: string) {
@@ -29,7 +29,7 @@ export class BuyItemsComponent implements OnInit {
   categories;
 
   constructor(private db:DatabaseService, private log: LoggerService) { 
-    this.config = {showCurrency:false};
+    this.config = { showCurrency:false };
   }
 
   ngOnInit() {
@@ -64,13 +64,12 @@ export class BuyItemsComponent implements OnInit {
     return v;   
   }
 
-  categoryToStr(value){   
-    console.log(value); 
+  categoryToStr(value) {       
     const v= this.categories[value]
     if (!v) { return null; }
     return  v.name;
   }
-  empty(value){
+  empty(value) {
     if (!value) { return "[empty]"; }
     return value;
   }

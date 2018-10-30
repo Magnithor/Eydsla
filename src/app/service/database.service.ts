@@ -3,7 +3,7 @@ import { LoggerService } from './logger.service';
 import { Travel } from '../interface/travel';
 import { BuyItem } from '../interface/buy-item';
 import { Currency } from '../interface/currency';
-import { MessageService, Message, MessageType } from './message.service';
+import { MessageService, Message, MessageSetting, MessageType } from './message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -35,10 +35,11 @@ export class DatabaseService {
     // https://en.wikipedia.org/wiki/ISO_4217
     return [
       { id:'ISK', describe: 'Íslenskar krónur'},
-      { id:'DKK', describe:'Danskar króur'},
-      { id:'CAD', describe:'$ canada'},
-      { id:'SEK', describe:'Sænskar króur'},
-      { id:'USD', describe:'$ US'}
+      { id:'DKK', describe: 'Danskar króur'},
+      { id:'CAD', describe: '$ canada'},
+      { id:'SEK', describe: 'Sænskar króur'},
+      { id:'USD', describe: '$ US'},
+      { id:'GPB', describe: 'Pond'}
      ]
   }
 
@@ -87,9 +88,9 @@ export class DatabaseService {
           if (!cursor) {
             resolve(arr);
             return;
-          }
+          }        
 
-          arr.push(cursor.value);
+          arr.push(this.fixTravelItem(cursor.value));
           cursor.continue();
         }
 
@@ -111,7 +112,7 @@ export class DatabaseService {
         const request = store.get(id);
         request.onsuccess = () => {
           if (request.result) {
-            resolve(request.result);
+            resolve(this.fixTravelItem(request.result));
           }
         }
 
@@ -173,10 +174,22 @@ export class DatabaseService {
     }
   }
   fixBuyItem(value: BuyItem): BuyItem {
-    if (value) {
-      if (typeof(value.date) === "string") {
-        value.date = new Date(value.date);
-      }
+    if (!value) { return value; }
+    
+    if (typeof(value.date) === "string") {
+      value.date = new Date(value.date);
+    }
+    
+    return value;
+  }
+  fixTravelItem(value: Travel): Travel {
+    if (!value) { return value; }
+    
+    if (typeof(value.from) === "string") {
+      value.from = new Date(value.from);
+    }
+    if (typeof(value.to) === "string") {
+      value.to = new Date(value.to);
     }
     return value;
   }
@@ -244,7 +257,10 @@ export class DatabaseService {
         const tx = conn.transaction('setting', 'readwrite' );
         const store = tx.objectStore('setting');
         const request = store.put(value, key);
-        request.onsuccess = () => resolve(request.result);
+        request.onsuccess = () => {
+          resolve(request.result);
+          this.messageService.sendMessage({type:MessageType.setting, key:key, value:value })
+        }
         request.onerror = () => reject(request.error);
       });
     }

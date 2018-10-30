@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, Input, EventEmitter } from '@angular/core';
 import { BuyItem, NewBuyItem, PersonSpentPercent, PersonSpentPrice } from '../../interface/buy-item';
 import { Travel, TravelPerson } from '../../interface/travel';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '../../service/logger.service';
 import { DatabaseService } from '../../service/database.service';
 import { AlertComponent } from '../alert/alert.component';
@@ -31,8 +31,8 @@ export class BuyItemComponent implements OnInit {
     return this._categoryColor;
   }
 
-  constructor(private route: ActivatedRoute, private log: LoggerService, private db: DatabaseService, private localStorageService: LocalStorageService) { 
-    this.route.paramMap.subscribe(async parm => { 
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private log: LoggerService, private db: DatabaseService, private localStorageService: LocalStorageService) { 
+    this.activatedRoute.paramMap.subscribe(async parm => { 
       if (parm.has("id")) {
         let buyItem = await this.db.GetBuyItemById(parm.get('id'));
         this.travel = await this.db.GetTravel(buyItem.travelId);
@@ -78,6 +78,7 @@ export class BuyItemComponent implements OnInit {
     await this.db.AddOrUpdateBuyItem(this.buyItem); 
     this.localStorageService.setValue("DefaultCurrency", this.buyItem.currency);
     this.alert.show("Saved");
+    this.router.navigate(['']);
   }
 
   UpdateColor():void  {

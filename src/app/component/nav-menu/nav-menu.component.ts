@@ -23,8 +23,8 @@ export class NavComponent implements OnInit {
     this._travelSelected = value;
     this.db.AddOrUpdateSettingItem('SelectTravel', value);
   }
+
   public get travelSelected():string {
- //   console.log('get');
     return this._travelSelected;
   }
   constructor(private db:DatabaseService, private messageService: MessageService, public router: Router) {

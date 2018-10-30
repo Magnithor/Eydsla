@@ -1,23 +1,42 @@
+
+<!--
 <div class="container-fluid">
   <a routerLink="/New/{{travelId}}">+</a>
-    <div class="row">
-      <div class="col-sm text-center font-weight-bold">Name</div>
-      <div class="col-sm text-center font-weight-bold">Date</div>
-      <div class="col-sm text-center font-weight-bold">category</div>
-      <div class="col-sm text-center font-weight-bold">Price</div>
-      <div  class="col-sm text-center font-weight-bold" *ngIf="config.showCurrency">Gengi</div>
+  <div class="rTable">
+    <div class="rTableRow">
+      <div class="rTableHead">Name</div>
+      <div class="rTableHead">Date</div>
+      <div class="rTableHead">category</div>
+      <div class="rTableHead">Price</div>
+      <div  class="rTableHead" *ngIf="config.showCurrency">Gengi</div>
       
-    </div>
+    </div> 
       <cdk-virtual-scroll-viewport itemSize="20" autosize style="Height:150px">
-        <div *cdkVirtualFor="let item of data" class="row">
-          <div class="col-sm"><a [routerLink]="['/EditBuyItem', item._id]" routera>{{empty(item.caption)}}</a></div> 
-          <div class="col-sm">{{dateToStr(item.date)}}</div>
-          <div class="col-sm">{{categoryToStr(item.category)}}</div>
-            <div class="col-sm text-right" style="padding-right: 0px;">{{Math.floor(item.price)}}</div> 
-            <div class="col-sm" style="padding-left: 0px;">{{getAfterDot(item.price)}}</div>
-
-            <div class="col-sm" *ngIf="config.showCurrency">{{item.currency}}</div>
+        <div *cdkVirtualFor="let item of data" class="rTableRow">
+          <div class="rTableCell"><a [routerLink]="['/EditBuyItem', item._id]" routera>{{empty(item.caption)}}</a></div> 
+          <div class="rTableCell">{{dateToStr(item.date)}}</div>
+          <div class="rTableCell">{{categoryToStr(item.category)}}</div>
+          <div class="rTableCell">{{item.price}}</div> 
+          <div class="rTableCell" *ngIf="config.showCurrency">{{item.currency}}</div>
         </div>
       </cdk-virtual-scroll-viewport>
-    
+  </div>
+</div>
+-->
+
+<div class="container-fluid">
+  <a routerLink="/New/{{travelId}}">+</a>
+    <table class="table-sm table-hover table-border">
+      <thead>
+        <tr><th>Name</th><th>Date</th><th>category</th><th colspan="2">Price</th><th *ngIf="config.showCurrency">Gengi</th></tr>
+      </thead>
+      <tr *ngFor="let item of data" >
+        <td><a [routerLink]="['/EditBuyItem', item._id]" routera>{{empty(item.caption)}}</a></td> 
+        <td>{{dateToStr(item.date)}}</td>
+        <td>{{categoryToStr(item.category)}}</td>
+        <td style="text-align: right; padding-right: 0px;">{{Math.floor(item.price)}}</td>
+        <td style="padding-left: 0px;">{{getAfterDot(item.price)}}</td>
+        <td *ngIf="config.showCurrency">{{item.currency}}</td>
+      </tr>
+    </table>
   </div>
