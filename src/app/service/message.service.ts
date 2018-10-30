@@ -5,23 +5,22 @@ export enum MessageType {
   sync,
   travel,
   setting
-}
+};
 export interface MessageTypeObject{
   type: MessageType
-}
-
+};
 export interface MessageTypeSync extends MessageTypeObject {
   type: MessageType.sync
-}
+};
 export interface MessageTravel extends MessageTypeObject {
   type: MessageType.travel,
   id: string
-}
+};
 export interface MessageSetting extends MessageTypeObject {
   type: MessageType.setting,
   key: string,
   value: any
-}
+};
 export type Message = MessageTypeSync | MessageTravel | MessageSetting;
 
 @Injectable({
@@ -29,6 +28,7 @@ export type Message = MessageTypeSync | MessageTravel | MessageSetting;
 })
 export class MessageService {
   private subject = new Subject<Message>();
+
   sendMessage(message: Message) {
     this.subject.next(message);
   }
@@ -40,4 +40,4 @@ export class MessageService {
   getMessage(): Observable<Message> {
     return this.subject.asObservable();
   }
-}
+};

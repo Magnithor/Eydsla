@@ -16,9 +16,7 @@ export class MainComponent implements OnInit {
   public travel: Travel;
   constructor( private db:DatabaseService, private messageService:MessageService ) {
     this.subscription = this.messageService.getMessage().subscribe(msg => this.OnMessage(msg));
-
   }
-
 
   async ngOnInit() {
     await this.update();
@@ -37,7 +35,6 @@ export class MainComponent implements OnInit {
         }
       break;
     }
-
   }
 
-}
+};
