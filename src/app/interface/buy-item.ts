@@ -18,6 +18,7 @@ export interface BuyItem extends Sync {
     caption: string,
     currency: string,
     price: number,
+    currencyValue: number,
     category?: number,
     personsSpent?: (PersonSpentPrice | PersonSpentPercent)[]
 };
@@ -28,8 +29,9 @@ export function NewBuyItem(travelId: string, userId: number) : BuyItem {
         travelId: travelId,
         date: new Date(),
         caption: "",
-        currency: "",
-        price: 0,
+        currency: "",   
+        price: null,  
+        currencyValue: null,           
         needToBeSync: true
     };
 };
