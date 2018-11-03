@@ -21,6 +21,7 @@ export class BuyItemComponent implements OnInit {
   precentPersonSum: number;
   pricePersonSum: number;
   personSum: number;
+  showEditCurrencyValue: boolean = false;
  
   private _categoryColor: string;
   @Input()
@@ -60,6 +61,16 @@ export class BuyItemComponent implements OnInit {
   ngOnInit() {
     this.buyItem = NewBuyItem("1", 1);
   }
+
+  currencyChange(){
+    console.log(this.buyItem.currency);
+    for (var i = 0; i < this.travel.currencies.length; i++) {
+      if (this.travel.currencies[i].id === this.buyItem.currency){        
+        this.buyItem.currencyValue = this.travel.currencies[i].trade;
+        break;
+      }
+    }
+  }
   
   setDeafultCurrency() {
     let defaultCurrency = this.localStorageService.getValue("DefaultCurrency");
@@ -69,6 +80,7 @@ export class BuyItemComponent implements OnInit {
       if (this.travel.currencies[i].id === defaultCurrency){
         found = true;
         this.buyItem.currency = defaultCurrency;
+        this.buyItem.currencyValue = this.travel.currencies[i].trade;
         break;
       }
     }
