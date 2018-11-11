@@ -1,9 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DatabaseService } from '../../service/database.service';
 import { BuyItem } from '../../interface/buy-item';
 import { LoggerService } from '../../service/logger.service';
 import { Travel, TravelCategory } from '../../interface/travel';
-import { CurrencyDefault } from 'src/app/interface/currency';
+import { InputConverter } from 'src/app/static/Convert';
+import { calcISK } from 'src/app/static/calcISK';
+import { getThousundDot, getAfterDot } from 'src/app/static/numbers';
 
 @Component({
   selector: 'app-buy-items',
@@ -15,7 +17,12 @@ export class BuyItemsComponent implements OnInit {
   private _travelId;
   public Math = Math;
   public config: { showCurrency:boolean };
-   
+  public _showAdd:boolean = false;
+  public travel: Travel;
+  @Input()
+  @InputConverter()
+  showAdd:boolean = true;
+  
   @Input()
   set travelId(value: string) {
     this._travelId = value;
@@ -38,7 +45,8 @@ export class BuyItemsComponent implements OnInit {
   }
 
   async getTravelId(id) {
-    const travel = await this.db.GetTravel(id);
+    this.travel = await this.db.GetTravel(id);
+    const travel = this.travel;
     this.categories = [];
     this.currencies = {};
     for (var i=0; i < travel.categories.length; i++) {
@@ -53,10 +61,11 @@ export class BuyItemsComponent implements OnInit {
   }
 
   getAfterDot(value:number) {
-    let str = value.toString();
-    let i = str.indexOf('.');
-    if (i == -1) { return ""; }
-    return str.substr(i).replace('.',',');
+    return getAfterDot(value);
+  }
+  
+  getThousundDot(value:number) {
+    return getThousundDot(value);
   }
 
   dateToStr(value:Date): string {   
@@ -82,21 +91,6 @@ export class BuyItemsComponent implements OnInit {
   }
 
   calcISK(value:BuyItem): number {
-    if (value.currency === null || value.currency === undefined) {
-      return null;
-    }
-
-    var currencyValue;
-    if (value.currencyValue === null || value.currencyValue === undefined) {
-      currencyValue = null;
-    } else {
-      currencyValue = value.currencyValue;
-    }
-
-    if (currencyValue === null) {
-      currencyValue = this.currencies[value.currency];
-    }
-
-    return currencyValue * value.price;
+    return calcISK(value, this.travel);
   }
 }

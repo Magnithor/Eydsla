@@ -17,7 +17,7 @@ export class SyncComponent implements OnInit {
   doSync(){
     this.sync.syncData((value,max)=> {
       this.syncPercent = (value / max) * 100;
-      console.log(this.syncPercent + " " + value + " " + max);
+      // console.log(this.syncPercent + " " + value + " " + max);
     });
   }
 }

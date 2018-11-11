@@ -14,6 +14,8 @@ export class MainComponent implements OnInit {
   private subscription: Subscription;
   public travelSelected: string;
   public travel: Travel;
+  public showPie = false;
+  public showTotal = false;
   constructor( private db:DatabaseService, private messageService:MessageService ) {
     this.subscription = this.messageService.getMessage().subscribe(msg => this.OnMessage(msg));
   }

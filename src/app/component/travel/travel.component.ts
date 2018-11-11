@@ -45,7 +45,7 @@ export class TravelComponent implements OnInit {
     if (!this.travel.categories) {
       this.travel.categories = [];
     }
-    this.travel.categories.push( {id: this.travel.categoryMaxId, name:'', color:"red" });
+    this.travel.categories.unshift( {id: this.travel.categoryMaxId, name:'', color:"red" });
     this.travel.categoryMaxId++;
   }
 

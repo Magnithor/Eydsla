@@ -54,8 +54,7 @@ export class NavComponent implements OnInit {
 
   }
 
-  async reReload() {
-    console.log('.');
+  async reReload() {    
     const travels = await this.db.GetTravels();
     travels.sort((a,b)=>b.from.getTime()-a.from.getTime());
     this.travels = travels;

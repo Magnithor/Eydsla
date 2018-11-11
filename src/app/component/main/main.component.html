@@ -1,6 +1,16 @@
 <div class="container-fluid">
     <h3>{{travel?.name}}</h3>
     <hr/>
-<app-pie travelId="{{travelSelected}}"></app-pie>
-<app-buy-items travelId="{{travelSelected}}"></app-buy-items>
+<div class="btn-toolbar" role="toolbar">
+    <div class="btn-group mb-2" role="group" style="padding-right:10px">
+        <button class="btn btn-primary" type="button" routerLink="/New/{{travel._id}}">Add</button>
+    </div>
+    <div class="btn-group mb-2" role="group">
+        <button class="btn btn-info" type="button" (click)="showPie = !showPie">Pie</button>
+        <button class="btn btn-info" type="button" (click)="showTotal = !showTotal">Total</button>
+    </div>
+</div>
+<app-total-category-table *ngIf="showTotal" travelId="{{travelSelected}}"></app-total-category-table>
+<app-pie *ngIf="showPie" travelId="{{travelSelected}}"></app-pie>
+<app-buy-items showAdd="false" travelId="{{travelSelected}}"></app-buy-items>
 </div>

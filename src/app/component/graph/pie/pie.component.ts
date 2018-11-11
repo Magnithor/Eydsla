@@ -29,8 +29,7 @@ export class PieComponent {
   constructor(private db:DatabaseService) { }
 
   public render() {
-    const ctx = this.canvas.getContext("2d");
-    
+    const ctx = this.canvas.getContext("2d");  
     
     let r = updateConvasSize(this.canvas, 200, 200);
     const w = this.canvas.width;
@@ -72,11 +71,12 @@ export class PieComponent {
     let cat;
     let total = 0;
     for (var i=0; i < data.length; i++) {      
-      if (data[i].category) {
-        cat = data[i].category;
-      } else {
+      if (data[i].category === null || data[i].category === undefined) {
         cat = "??";
+      } else {
+        cat =  data[i].category; 
       }
+
       if (result[cat] === undefined) {        
         result[cat] = {t:0, c:this.getColorFromCategories(travel.categories, cat)};
       }
@@ -88,6 +88,7 @@ export class PieComponent {
     this.data = {total: total, data: result};
     this.render();
   }
+
   getColorFromCategories(categories:TravelCategory[], cat){
     for (var i=0; i < categories.length; i++){
       if (categories[i].id == cat){
