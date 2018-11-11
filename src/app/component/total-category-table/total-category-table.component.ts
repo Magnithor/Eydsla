@@ -19,60 +19,58 @@ export class TotalCategoryTableComponent {
   }
 
   public _travelId: string;
-  public data : {[category: string]:{ total: number, category: string}};
-  public total: number = 0;
+  public data: {[category: string]: {total: number, category: string}};
+  public total = 0;
   public Math = Math;
   public travel: Travel;
 
 
-  constructor(private db:DatabaseService) { }
-  getAfterDot(value:number) {
+  constructor(private db: DatabaseService) { }
+  getAfterDot(value: number) {
     return getAfterDot(value);
   }
 
-  getThousundDot(value:number) {
+  getThousundDot(value: number) {
     return getThousundDot(value);
   }
-  
-  calcISK(value:BuyItem): number {
+
+  calcISK(value: BuyItem): number {
     return calcISK(value, this.travel);
   }
-
 
   async getTravelId(id) {
     this.travel = await this.db.GetTravel(id);
     const data = await this.db.GetBuyItemByTravelId(id);
-    var result = {};
+    const result = {};
     let cat;
     let total = 0;
-    for (var i=0; i < data.length; i++) {      
+    for (let i = 0; i < data.length; i++) {
       if (data[i].category === null || data[i].category === undefined) {
-        cat = "??";
+        cat = '??';
       } else {
-        cat =  data[i].category; 
+        cat = data[i].category;
       }
-      let price = this.calcISK(data[i]);
+      const price = this.calcISK(data[i]);
 
-      if (result[cat] === undefined) {        
-        result[cat] = {total:0, category:this.getNameFromCategories(this.travel.categories, cat)};
+      if (result[cat] === undefined) {
+        result[cat] = {total: 0, category: this.getNameFromCategories(this.travel.categories, cat)};
       }
-      
+
       result[cat].total += price;
       total += price;
     }
-    
+
     this.total = total;
     this.data = result;
   }
 
-  getNameFromCategories(categories:TravelCategory[], cat){
-    for (var i=0; i < categories.length; i++){
-      if (categories[i].id == cat){
+  getNameFromCategories(categories: TravelCategory[], cat) {
+    for (let i = 0; i < categories.length; i++) {
+      if (categories[i].id === cat) {
         return categories[i].name;
       }
     }
 
-    return "??";
+    return '??';
   }
-
 }

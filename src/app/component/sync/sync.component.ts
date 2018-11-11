@@ -8,14 +8,14 @@ import { SyncService } from '../../service/sync.service';
 })
 export class SyncComponent implements OnInit {
 
-  syncPercent:number = 0;
+  syncPercent = 0;
   constructor(private sync: SyncService) { }
 
   ngOnInit() {
   }
 
-  doSync(){
-    this.sync.syncData((value,max)=> {
+  doSync() {
+    this.sync.syncData((value, max) => {
       this.syncPercent = (value / max) * 100;
       // console.log(this.syncPercent + " " + value + " " + max);
     });

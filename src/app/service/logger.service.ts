@@ -6,9 +6,9 @@ import { Injectable } from '@angular/core';
 export class LoggerService {
 
   constructor() { }
-  public log(msg: any)   { 
+  public log(msg: any) {
     console.log(msg);
   }
   public error(msg: any) { console.error(msg); }
-  public warn(msg: any)  { console.warn(msg); }
+  public warn(msg: any) { console.warn(msg); }
 }

@@ -11,23 +11,23 @@ export class AlertComponent {
   private _text = 'bla';
   public showing = false;
   private showCloseBtn = true;
- 
+
   @Input()
   set text(value: string) {
     this._text = value;
   }
- 
-  get text(): string { 
-    return this._text; 
+
+  get text(): string {
+    return this._text;
   }
 
   constructor() { }
 
-  hide(){
+  hide() {
     this.showing = false;
   }
 
-  show(value:string, timeoutInSec: number = 15) {
+  show(value: string, timeoutInSec: number = 15) {
     if (this.timeoutHide) {
       clearTimeout(this.timeoutHide);
       this.timeoutHide = null;

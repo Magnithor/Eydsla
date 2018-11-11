@@ -2,12 +2,11 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Travel } from '../../interface/travel';
 import { Subscription } from 'rxjs';
 import { DatabaseService } from '../../service/database.service';
-import { TravelComponent } from '../travel/travel.component';
 import { MessageService, Message, MessageType } from '../../service/message.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'nav-menu',
+  selector: 'app-nav-menu',
   templateUrl: './nav-menu.component.html',
   styleUrls: ['./nav-menu.component.css']
 })
@@ -24,10 +23,10 @@ export class NavComponent implements OnInit {
     this.db.AddOrUpdateSettingItem('SelectTravel', value);
   }
 
-  public get travelSelected():string {
+  public get travelSelected(): string {
     return this._travelSelected;
   }
-  constructor(private db:DatabaseService, private messageService: MessageService, public router: Router) {
+  constructor(private db: DatabaseService, private messageService: MessageService, public router: Router) {
     this.subscription = this.messageService.getMessage().subscribe(msg => this.OnMessage(msg));
     console.log(router);
    }
@@ -44,23 +43,22 @@ export class NavComponent implements OnInit {
     this.collapse = true;
   }
 
-  OnMessage(item:Message){
-    switch(item.type) {
+  OnMessage(item: Message) {
+    switch (item.type) {
       case MessageType.travel:
       case MessageType.sync:
         this.reReload();
       break;
     }
-
   }
 
-  async reReload() {    
+  async reReload() {
     const travels = await this.db.GetTravels();
-    travels.sort((a,b)=>b.from.getTime()-a.from.getTime());
+    travels.sort((a, b) => b.from.getTime() - a.from.getTime());
     this.travels = travels;
     this._travelSelected = await this.db.GetSettingItem('SelectTravel');
     if (this._travelSelected === null && travels.length > 0) {
-      this.travelSelected = travels[0]._id;      
+      this.travelSelected = travels[0]._id;
     }
   }
 }

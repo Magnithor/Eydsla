@@ -1,5 +1,5 @@
 export interface Sync {
-    _id: string,
-    needToBeSync: boolean,
-    lastUpdate?: Date
+    _id: string;
+    needToBeSync: boolean;
+    lastUpdate?: Date;
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from '../../service/database.service';
-import { Travel } from '../../interface/travel'
+import { Travel } from '../../interface/travel';
 import { Subscription } from 'rxjs';
 import { MessageService, Message, MessageType } from '../../service/message.service';
 
@@ -16,7 +16,7 @@ export class MainComponent implements OnInit {
   public travel: Travel;
   public showPie = false;
   public showTotal = false;
-  constructor( private db:DatabaseService, private messageService:MessageService ) {
+  constructor( private db: DatabaseService, private messageService: MessageService ) {
     this.subscription = this.messageService.getMessage().subscribe(msg => this.OnMessage(msg));
   }
 
@@ -24,19 +24,18 @@ export class MainComponent implements OnInit {
     await this.update();
   }
 
-  async update(){
+  async update() {
     this.travelSelected = await this.db.GetSettingItem('SelectTravel');
     this.travel = await this.db.GetTravel(this.travelSelected);
   }
 
-  async OnMessage(item: Message){
-    switch(item.type) {
+  async OnMessage(item: Message) {
+    switch (item.type) {
       case MessageType.setting:
-        if(item.key === "SelectTravel"){
+        if (item.key === 'SelectTravel') {
           await this.update();
         }
       break;
     }
   }
-
-};
+}

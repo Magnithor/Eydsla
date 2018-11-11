@@ -17,27 +17,26 @@ export class TravelComponent implements OnInit {
   @ViewChild('alert') alert: AlertComponent;
   @ViewChild('myForm') myForm;
   @ViewChild('currency') selectCurrency;
- 
+
   public currencies: Currency[];
-  public filterCurrencies:Currency[];
-  
+  public filterCurrencies: Currency[];
   public travel: Travel;
 
-  constructor(private route: ActivatedRoute, private log: LoggerService, private db: DatabaseService) { 
+  constructor(private route: ActivatedRoute, private log: LoggerService, private db: DatabaseService) {
     this.currencies = this.db.GetCurrencies();
-    this.route.paramMap.subscribe(async parm => { 
-      if (parm.has("id")) {
+    this.route.paramMap.subscribe(async parm => {
+      if (parm.has('id')) {
         this.travel = await this.db.GetTravel(parm.get('id'));
-        this.Filter();     
-        this.log.warn(parm.get("id"));
+        this.Filter();
+        this.log.warn(parm.get('id'));
       } else {
         this.travel = NewTravel(1);
-        this.Filter();        
+        this.Filter();
       }
     });
   }
 
-  UpdateDate(value) : Date {
+  UpdateDate(value): Date {
     return new Date(value);
   }
 
@@ -45,13 +44,13 @@ export class TravelComponent implements OnInit {
     if (!this.travel.categories) {
       this.travel.categories = [];
     }
-    this.travel.categories.unshift( {id: this.travel.categoryMaxId, name:'', color:"red" });
+    this.travel.categories.unshift({id: this.travel.categoryMaxId, name: '', color: 'red'});
     this.travel.categoryMaxId++;
   }
 
   AddCurrency() {
     if (this.selectCurrency.nativeElement.value) {
-      this.travel.currencies.push({id:this.selectCurrency.nativeElement.value, trade:1});
+      this.travel.currencies.push({id: this.selectCurrency.nativeElement.value, trade: 1});
       this.Filter();
     }
   }
@@ -64,15 +63,15 @@ export class TravelComponent implements OnInit {
       this.travel.personMaxId = 0;
     }
 
-    this.travel.persons.push({id:this.travel.personMaxId, name:""});
+    this.travel.persons.push({id: this.travel.personMaxId, name: ''});
     this.travel.personMaxId++;
   }
 
   Filter() {
     this.filterCurrencies = [];
-    for (var i = 0; i < this.currencies.length; i++) {
-      var found = false;
-      for (var o=0; o < this.travel.currencies.length; o++) {
+    for (let i = 0; i < this.currencies.length; i++) {
+      let found = false;
+      for (let o = 0; o < this.travel.currencies.length; o++) {
         if (this.currencies[i].id === this.travel.currencies[o].id) {
           found = true;
           break;
@@ -86,13 +85,12 @@ export class TravelComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.travel = NewTravel(1);      
+    this.travel = NewTravel(1);
   }
 
   async onSave() {
-    
-   await this.db.AddOrUpdateTravel(this.travel); 
-   this.alert.show("Saved");
+   await this.db.AddOrUpdateTravel(this.travel);
+   this.alert.show('Saved');
   }
 
 }

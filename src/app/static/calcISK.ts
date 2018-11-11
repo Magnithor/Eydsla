@@ -1,12 +1,12 @@
 import { BuyItem } from '../interface/buy-item';
-import { Travel } from '../interface/travel'
+import { Travel } from '../interface/travel';
 
-export function calcISK(value:BuyItem, travel:Travel): number {
+export function calcISK(value: BuyItem, travel: Travel): number {
     if (value.currency === null || value.currency === undefined) {
       return null;
     }
 
-    var currencyValue;
+    let currencyValue;
     if (value.currencyValue === null || value.currencyValue === undefined) {
       currencyValue = null;
     } else {
@@ -14,8 +14,8 @@ export function calcISK(value:BuyItem, travel:Travel): number {
     }
 
     if (currencyValue === null) {
-      for (var i = 0; i < travel.currencies.length; i++) {
-        if (travel.currencies[i].id == value.currency) {
+      for (let i = 0; i < travel.currencies.length; i++) {
+        if (travel.currencies[i].id === value.currency) {
           currencyValue = travel.currencies[i].trade;
           break;
         }

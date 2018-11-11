@@ -1,75 +1,71 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { DatabaseService } from './database.service';
 import { LoggerService } from './logger.service';
 import { http } from '../static/http';
 import { Sync } from '../interface/sync';
-import { MessageService, Message, MessageType } from './message.service';
+import { MessageService, MessageType } from './message.service';
 
 interface SyncData {
-  hasChanged : Sync[],
-  newestSyncData: Date
-};
+  hasChanged: Sync[];
+  newestSyncData: Date;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class SyncService {
-  syncSteps:number = 0;
-  syncStepsMax:number=3;
+  syncSteps = 0;
+  syncStepsMax = 3;
 
-  constructor(private logger: LoggerService, private db: DatabaseService,  private messageService: MessageService) 
-  { 
+  constructor(private logger: LoggerService, private db: DatabaseService, private messageService: MessageService) {
   }
 
   async syncData(sendProgress?: (value, max) => void) {
-    let p=1;
-    let doSend = function(v) {
-      if(sendProgress){
+    let p = 1;
+    const doSend = function(v) {
+      if (sendProgress) {
         sendProgress(v, 5);
-      }  
-    }
+      }
+    };
 
     const travelData = this.ToOnlySyncArray(await this.db.GetTravels());
     doSend(p++);
     const buyItemsData = this.ToOnlySyncArray(await this.db.GetBuyItems());
     doSend(p++);
     // get all
-    
-    var httpData = await http("https://eydsla.strumpur.net/sync.php", 
+
+    const httpData = await http('https://eydsla.strumpur.net/sync.php',
       {travels: travelData,
       buyItems: buyItemsData});
     doSend(p++);
-    
+
     this.logger.log(httpData);
-    for (let i=0; i < httpData.travels.length; i++)
-    {
+    for (let i = 0; i < httpData.travels.length; i++) {
       await this.db.AddOrUpdateTravel(httpData.travels[i], true);
     }
     doSend(p++);
 
-    for (let i=0; i < httpData.buyItems.length; i++)
-    {
+    for (let i = 0; i < httpData.buyItems.length; i++) {
       await this.db.AddOrUpdateBuyItem(httpData.buyItems[i], true);
     }
     doSend(p++);
 
-    this.messageService.sendMessage({type : MessageType.sync})
+    this.messageService.sendMessage({type: MessageType.sync});
   }
 
-  private ToOnlySyncArray(data: Sync[]):SyncData{
-    let list:Sync[] = [];
+  private ToOnlySyncArray(data: Sync[]): SyncData {
+    const list: Sync[] = [];
     let newestDate: Date;
     data.forEach(element => {
       if (element.needToBeSync) {
         list.push(element);
       } else {
-        if (!newestDate || newestDate < element.lastUpdate){
+        if (!newestDate || newestDate < element.lastUpdate) {
           newestDate = element.lastUpdate;
         }
       }
     });
 
-    return {hasChanged:list, newestSyncData: newestDate};
+    return {hasChanged: list, newestSyncData: newestDate};
   }
 }

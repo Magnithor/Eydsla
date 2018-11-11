@@ -21,8 +21,8 @@ export class BuyItemComponent implements OnInit {
   precentPersonSum: number;
   pricePersonSum: number;
   personSum: number;
-  showEditCurrencyValue: boolean = false;
- 
+  showEditCurrencyValue = false;
+
   private _categoryColor: string;
   @Input()
   set categoryColor(value: string) {
@@ -32,23 +32,25 @@ export class BuyItemComponent implements OnInit {
     return this._categoryColor;
   }
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private log: LoggerService, private db: DatabaseService, private localStorageService: LocalStorageService) { 
-    this.activatedRoute.paramMap.subscribe(async parm => { 
-      if (parm.has("id")) {
-        let buyItem = await this.db.GetBuyItemById(parm.get('id'));
+  constructor(private activatedRoute: ActivatedRoute, private router: Router,
+    private log: LoggerService, private db: DatabaseService,
+    private localStorageService: LocalStorageService) {
+    this.activatedRoute.paramMap.subscribe(async parm => {
+      if (parm.has('id')) {
+        const buyItem = await this.db.GetBuyItemById(parm.get('id'));
         this.travel = await this.db.GetTravel(buyItem.travelId);
         this.buyItem = buyItem;
       }  else {
-        if (parm.has("travelId")){
-          let buyItem = NewBuyItem(parm.get("travelId"), 1);
+        if (parm.has('travelId')) {
+          const buyItem = NewBuyItem(parm.get('travelId'), 1);
           this.travel = await this.db.GetTravel(buyItem.travelId);
           this.buyItem = buyItem;
           this.setDeafultCurrency();
         } else {
-          let travelId = await this.db.GetSettingItem('SelectTravel');
+          const travelId = await this.db.GetSettingItem('SelectTravel');
           this.travel = await this.db.GetTravel(travelId);
           this.buyItem = NewBuyItem(travelId, 1);
-          this.setDeafultCurrency();          
+          this.setDeafultCurrency();
         }
       }
 
@@ -59,25 +61,25 @@ export class BuyItemComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.buyItem = NewBuyItem("1", 1);
+    this.buyItem = NewBuyItem('1', 1);
   }
 
-  currencyChange(){
+  currencyChange() {
     console.log(this.buyItem.currency);
-    for (var i = 0; i < this.travel.currencies.length; i++) {
-      if (this.travel.currencies[i].id === this.buyItem.currency){        
+    for (let i = 0; i < this.travel.currencies.length; i++) {
+      if (this.travel.currencies[i].id === this.buyItem.currency) {
         this.buyItem.currencyValue = this.travel.currencies[i].trade;
         break;
       }
     }
   }
-  
+
   setDeafultCurrency() {
-    let defaultCurrency = this.localStorageService.getValue("DefaultCurrency");
+    const defaultCurrency = this.localStorageService.getValue('DefaultCurrency');
     let found = false;
-    
-    for (var i = 0; i < this.travel.currencies.length; i++) {
-      if (this.travel.currencies[i].id === defaultCurrency){
+
+    for (let i = 0; i < this.travel.currencies.length; i++) {
+      if (this.travel.currencies[i].id === defaultCurrency) {
         found = true;
         this.buyItem.currency = defaultCurrency;
         this.buyItem.currencyValue = this.travel.currencies[i].trade;
@@ -86,36 +88,35 @@ export class BuyItemComponent implements OnInit {
     }
   }
 
-  async onSave() {    
-    await this.db.AddOrUpdateBuyItem(this.buyItem); 
-    this.localStorageService.setValue("DefaultCurrency", this.buyItem.currency);
-    this.alert.show("Saved");
+  async onSave() {
+    await this.db.AddOrUpdateBuyItem(this.buyItem);
+    this.localStorageService.setValue('DefaultCurrency', this.buyItem.currency);
+    this.alert.show('Saved');
     this.router.navigate(['']);
   }
 
-  UpdateColor():void  {
-    if (this.buyItem.category === null || this.buyItem.category === undefined)
-    {
+  UpdateColor(): void  {
+    if (this.buyItem.category === null || this.buyItem.category === undefined) {
       this.categoryColor = null;
       return;
     }
-    
-    for (var i=0; i < this.travel.categories.length; i++){
-      if (this.travel.categories[i].id == this.buyItem.category) {
+
+    for (let i = 0; i < this.travel.categories.length; i++) {
+      if (this.travel.categories[i].id === this.buyItem.category) {
         this.categoryColor = this.travel.categories[i].color;
         return;
       }
     }
     this.categoryColor = null;
   }
-  
+
   UpdatePeopleFilter() {
-    let list = [];
+    const list = [];
     for (let i = 0; i < this.travel.persons.length; i++) {
       let skip = false;
       if (this.buyItem.personsSpent) {
-        for (let p=0; p < this.buyItem.personsSpent.length; p++) {
-          if (this.buyItem.personsSpent[p].personId == this.travel.persons[i].id) {
+        for (let p = 0; p < this.buyItem.personsSpent.length; p++) {
+          if (this.buyItem.personsSpent[p].personId === this.travel.persons[i].id) {
             skip = true;
           }
         }
@@ -125,13 +126,13 @@ export class BuyItemComponent implements OnInit {
         list.push(this.travel.persons[i]);
       }
     }
-    
+
     this.filterPersons = list;
   }
 
   getPersionFromId(id) {
-    for (let i =0; i < this.travel.persons.length; i++) {
-      if (this.travel.persons[i].id == id){
+    for (let i = 0; i < this.travel.persons.length; i++) {
+      if (this.travel.persons[i].id === id) {
         return this.travel.persons[i].name;
       }
     }
@@ -152,8 +153,8 @@ export class BuyItemComponent implements OnInit {
 
   UpdatePersonValues() {
     if (!this.buyItem.personsSpent) {
-      this.precentPersonSum  = undefined;
-      this.pricePersonSum = undefined
+      this.precentPersonSum = undefined;
+      this.pricePersonSum = undefined;
       this.personSum = undefined;
       return;
     }
@@ -161,7 +162,7 @@ export class BuyItemComponent implements OnInit {
     let percent = 0;
     let price = 0;
     for (let i = 0; i < this.buyItem.personsSpent.length; i++) {
-      let spent = this.buyItem.personsSpent[i];
+      const spent = this.buyItem.personsSpent[i];
       if ((spent as PersonSpentPercent).percent !== undefined) {
         percent += (spent as PersonSpentPercent).percent;
       }
@@ -170,8 +171,8 @@ export class BuyItemComponent implements OnInit {
       }
     }
 
-    if (percent > 0) { 
-      percent = percent /100; 
+    if (percent > 0) {
+      percent = percent / 100;
       this.precentPersonSum = -(this.buyItem.price * percent);
     } else {
       this.precentPersonSum = 0;

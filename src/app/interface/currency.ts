@@ -1,9 +1,9 @@
 export interface Currency {
-    id: string,
-    describe: string
+    id: string;
+    describe: string;
 }
 
 export interface CurrencyDefault {
-    id: string,
-    trade?: number
+    id: string;
+    trade?: number;
 }
