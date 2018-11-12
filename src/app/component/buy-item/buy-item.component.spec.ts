@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BuyItemComponent } from './buy-item.component';
+import { AlertComponent } from '../alert/alert.component';
+import { DatetimePickerComponent } from '../datetime-picker/datetime-picker.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { FormsModule } from '@angular/forms';
 
 describe('BuyItemComponent', () => {
   let component: BuyItemComponent;
@@ -8,7 +12,8 @@ describe('BuyItemComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BuyItemComponent ]
+      imports: [ FormsModule, RouterTestingModule ],
+      declarations: [ BuyItemComponent, AlertComponent, DatetimePickerComponent ]
     })
     .compileComponents();
   }));

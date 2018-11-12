@@ -13,6 +13,9 @@ export class PieComponent {
   @Input()
   set travelId(value: string) {
     this._travelId = value;
+    if (value === null || value === undefined) {
+      return;
+    }
     this.getTravelId(value);
   }
   @ViewChild('canvas') set setCanvas(conent: ElementRef) {

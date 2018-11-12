@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SyncComponent } from './sync.component';
+import { FormsModule } from '@angular/forms';
 
 describe('SyncComponent', () => {
   let component: SyncComponent;
@@ -8,6 +9,7 @@ describe('SyncComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports:[FormsModule],
       declarations: [ SyncComponent ]
     })
     .compileComponents();

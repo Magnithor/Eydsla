@@ -13,13 +13,17 @@ export function calcISK(value: BuyItem, travel: Travel): number {
       currencyValue = value.currencyValue;
     }
 
-    if (currencyValue === null) {
+    if (currencyValue === null && travel != null && travel.currencies != null) {
       for (let i = 0; i < travel.currencies.length; i++) {
         if (travel.currencies[i].id === value.currency) {
           currencyValue = travel.currencies[i].trade;
           break;
         }
       }
+    }
+
+    if (currencyValue === null) {
+      return null;
     }
 
     return currencyValue * value.price;
