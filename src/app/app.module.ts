@@ -18,6 +18,7 @@ import { SyncComponent } from './component/sync/sync.component';
 import { DatetimePickerComponent } from './component/datetime-picker/datetime-picker.component';
 import { PieComponent } from './component/graph/pie/pie.component';
 import { TotalCategoryTableComponent } from './component/total-category-table/total-category-table.component';
+import { LoginComponent } from './component/login/login.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { TotalCategoryTableComponent } from './component/total-category-table/to
     SyncComponent,
     DatetimePickerComponent,
     PieComponent,
-    TotalCategoryTableComponent
+    TotalCategoryTableComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

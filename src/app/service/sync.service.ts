@@ -50,6 +50,12 @@ export class SyncService {
     }
     doSend(p++);
 
+    for (let i = 0; i < httpData.users.length; i++) {
+      await this.db.AddOrUpdateUser(httpData.users[i], true);
+    }
+    doSend(p++);
+
+
     this.messageService.sendMessage({type: MessageType.sync});
   }
 

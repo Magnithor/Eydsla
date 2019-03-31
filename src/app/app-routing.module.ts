@@ -5,15 +5,18 @@ import { TravelComponent } from './component/travel/travel.component';
 import { TravelsComponent } from './component/travels/travels.component';
 import { SyncComponent } from './component/sync/sync.component';
 import { BuyItemComponent } from './component/buy-item/buy-item.component';
+import { LoginComponent } from './component/login/login.component';
+import { AuthGuard } from './authGuard';
 
 const routes: Routes = [
-  { path: '', component: MainComponent},
-  { path: 'New', component: BuyItemComponent},
-  { path: 'New/:travelId', component: BuyItemComponent},
-  { path: 'EditBuyItem/:id', component: BuyItemComponent},
-  { path: 'EditTravel/:id', component: TravelComponent},
-  { path: 'EditTravel', component: TravelComponent},
-  { path: 'Travels', component: TravelsComponent},
+  { path: '', component: MainComponent, canActivate: [AuthGuard]},
+  { path: 'Login', component: LoginComponent},
+  { path: 'New', component: BuyItemComponent, canActivate: [AuthGuard]},
+  { path: 'New/:travelId', component: BuyItemComponent, canActivate: [AuthGuard]},
+  { path: 'EditBuyItem/:id', component: BuyItemComponent, canActivate: [AuthGuard]},
+  { path: 'EditTravel/:id', component: TravelComponent, canActivate: [AuthGuard]},
+  { path: 'EditTravel', component: TravelComponent, canActivate: [AuthGuard]},
+  { path: 'Travels', component: TravelsComponent, canActivate: [AuthGuard]},
   { path: 'Sync', component: SyncComponent},
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

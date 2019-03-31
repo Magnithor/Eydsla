@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { DatabaseService } from '../../service/database.service';
 import { MessageService, Message, MessageType } from '../../service/message.service';
 import { Router } from '@angular/router';
+import { AuthenticationService } from './../../service/authentication.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -26,7 +27,7 @@ export class NavComponent implements OnInit {
   public get travelSelected(): string {
     return this._travelSelected;
   }
-  constructor(private db: DatabaseService, private messageService: MessageService, public router: Router) {
+  constructor(private db: DatabaseService, private messageService: MessageService, public router: Router, public authenticationService: AuthenticationService) {
     this.subscription = this.messageService.getMessage().subscribe(msg => this.OnMessage(msg));
     console.log(router);
    }

@@ -4,6 +4,7 @@ import { Travel } from '../interface/travel';
 import { BuyItem } from '../interface/buy-item';
 import { Currency } from '../interface/currency';
 import { MessageService, MessageType } from './message.service';
+import { User, UserSecure } from '../interface/user';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,7 @@ export class DatabaseService {
         const buyItem = db.createObjectStore('buyItem');
         buyItem.createIndex('travelId', 'travelId');
         db.createObjectStore('setting');
+        db.createObjectStore('user');
       };
 
       request.onsuccess = () => resolve(request.result);
@@ -294,4 +296,55 @@ export class DatabaseService {
   }
 
   //#endregion
+
+  //#region User
+  public async AddOrUpdateUser(user: User, notUpdateNeedForSync?: boolean) {
+    if (!notUpdateNeedForSync) {
+      user.needToBeSync = true;
+    }
+    let conn: IDBDatabase;
+    try {
+      conn = await this.OpenDb();
+      await new Promise((resolve, reject) => {
+        const tx = conn.transaction('user', 'readwrite' );
+        const store = tx.objectStore('user');
+        const request = store.put(user, user._id);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+    finally {
+      if (conn) { conn.close(); }
+    }
+  }
+
+  public async GetUser(username: string): Promise<UserSecure> {
+    let conn: IDBDatabase;
+    try {
+      conn = await this.OpenDb();
+      return await new Promise<any>((resolve, reject) => {
+        const tx = conn.transaction('user', 'readonly' );
+        const store = tx.objectStore('user');
+        const request = store.getAll();
+        request.onsuccess = () => {
+          if (request.result) {
+            for (let i = 0;i < request.result.length; i++){
+              if (request.result[i].username.toUpperCase() === username.toUpperCase()){
+                resolve(request.result[i]);
+                break;
+              }
+            }            
+          }
+
+          resolve(null);
+        };
+
+        request.onerror = () => reject(request.error);
+      });
+    }
+    finally {
+      if (conn) { conn.close(); }
+    }
+  }
+  //#end
 }

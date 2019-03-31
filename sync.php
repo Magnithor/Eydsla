@@ -41,6 +41,10 @@
         foreach ($data as $key => $value) {
             if ($value instanceof MongoDB\BSON\UTCDateTime) {
                 $data->{$key} = $value->toDateTime()->format('Y-m-d\TH:i:s\Z');
+            } else {
+                if ($value instanceof MongoDB\BSON\ObjectId) {
+                    $data->{$key} = $value->__toString();
+                }
             }
         }
         return $data;
@@ -79,6 +83,7 @@
 
     $result->travels = sync($mng, "travel", $data->travels, $time);
     $result->buyItems = sync($mng, "buyItem", $data->buyItems, $time);
+    $result->users = sync($mng, "user", $data->users, $time);
 
     echo(json_encode($result));
 
