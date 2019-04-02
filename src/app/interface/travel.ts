@@ -1,6 +1,7 @@
 import { NewId } from '../static/id';
 import { Sync } from './sync';
 import { CurrencyDefault } from './currency';
+import { NewKey } from '../static/randomKey';
 
 export interface TravelCategory {
     id: number;
@@ -15,6 +16,7 @@ export interface TravelPerson {
 
 export interface Travel extends Sync {
     _id: string;
+    key: string;
     name: string;
     from: Date;
     to: Date;
@@ -25,9 +27,10 @@ export interface Travel extends Sync {
     persons: TravelPerson[];
 }
 
-export function NewTravel(userId: number): Travel {
+export function NewTravel(): Travel {
     return {
         _id: NewId(),
+        key: NewKey(),
         from: new Date(),
         to: new Date(),
         name: '',

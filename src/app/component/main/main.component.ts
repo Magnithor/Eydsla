@@ -26,7 +26,7 @@ export class MainComponent implements OnInit {
 
   async update() {
     this.travelSelected = await this.db.GetSettingItem('SelectTravel');
-    if (this.travelSelected){
+    if (this.travelSelected) {
       this.travel = await this.db.GetTravel(this.travelSelected);
     }
   }

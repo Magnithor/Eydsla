@@ -8,12 +8,12 @@ import * as CryptoJS from 'crypto-js';
 })
 export class AuthenticationService {
 
-  constructor(private database:DatabaseService) {
+  constructor(private database: DatabaseService) {
 
   }
 
   isLogin = false;
-  set(keys:string, value:string):string {
+  set(keys: string, value: string): string {
     const key = CryptoJS.enc.Utf8.parse(keys);
     const iv = CryptoJS.enc.Utf8.parse(keys);
     const encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(value.toString()), key,
@@ -27,11 +27,11 @@ export class AuthenticationService {
     return encrypted.toString();
   }
 
-  setObject(keys:string, value:any):string{
+  setObject(keys: string, value: any): string {
     return this.set(keys, JSON.stringify(value));
   }
 
-  get(keys:string, value:string):string {
+  get(keys: string, value: string): string {
     const key = CryptoJS.enc.Utf8.parse(keys);
     const iv = CryptoJS.enc.Utf8.parse(keys);
     const decrypted = CryptoJS.AES.decrypt(value, key, {
@@ -44,21 +44,21 @@ export class AuthenticationService {
     return decrypted.toString(CryptoJS.enc.Utf8);
   }
 
-  getObject(key:string, value:string):any {
-    return JSON.parse(this.get(key,value));
+  getObject(key: string, value: string): any {
+    return JSON.parse(this.get(key, value));
   }
 
-  public async login(user:string, pass:string):Promise<boolean> {
+  public async login(user: string, pass: string): Promise<boolean> {
     this.isLogin = false;
     let dataStr;
     try  {
     const userDate = await this.database.GetUser(user);
 
     dataStr = this.get(pass, userDate.secureData);
-    } catch{
+    } catch {
       return false;
     }
-    if (!dataStr || dataStr === "") {
+    if (!dataStr || dataStr === '') {
       return false;
     }
 

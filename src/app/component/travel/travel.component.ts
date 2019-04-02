@@ -30,7 +30,7 @@ export class TravelComponent implements OnInit {
         this.Filter();
         this.log.warn(parm.get('id'));
       } else {
-        this.travel = NewTravel(1);
+        this.travel = NewTravel();
         this.Filter();
       }
     });
@@ -85,12 +85,11 @@ export class TravelComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.travel = NewTravel(1);
+    this.travel = NewTravel();
   }
 
   async onSave() {
    await this.db.AddOrUpdateTravel(this.travel);
    this.alert.show('Saved');
   }
-
 }

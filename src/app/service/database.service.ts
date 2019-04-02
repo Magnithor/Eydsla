@@ -328,12 +328,12 @@ export class DatabaseService {
         const request = store.getAll();
         request.onsuccess = () => {
           if (request.result) {
-            for (let i = 0;i < request.result.length; i++){
-              if (request.result[i].username.toUpperCase() === username.toUpperCase()){
+            for (let i = 0; i < request.result.length; i++) {
+              if (request.result[i].username.toUpperCase() === username.toUpperCase()) {
                 resolve(request.result[i]);
                 break;
               }
-            }            
+            }
           }
 
           resolve(null);
@@ -346,5 +346,5 @@ export class DatabaseService {
       if (conn) { conn.close(); }
     }
   }
-  //#end
+  // #end
 }

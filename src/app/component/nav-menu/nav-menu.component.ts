@@ -27,7 +27,10 @@ export class NavComponent implements OnInit {
   public get travelSelected(): string {
     return this._travelSelected;
   }
-  constructor(private db: DatabaseService, private messageService: MessageService, public router: Router, public authenticationService: AuthenticationService) {
+  constructor(private db: DatabaseService,
+    private messageService: MessageService,
+    public router: Router,
+    public authenticationService: AuthenticationService) {
     this.subscription = this.messageService.getMessage().subscribe(msg => this.OnMessage(msg));
     console.log(router);
    }

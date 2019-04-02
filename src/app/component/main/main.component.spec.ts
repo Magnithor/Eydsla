@@ -12,7 +12,7 @@ describe('MainComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports:[RouterTestingModule],
+      imports: [RouterTestingModule],
       declarations: [ MainComponent, BuyItemsComponent, PieComponent, TotalCategoryTableComponent ]
     })
     .compileComponents();
