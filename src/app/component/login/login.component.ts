@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import * as CryptoJS from 'crypto-js';
+import { Encryption} from './../../static/encryption';
 import { AuthenticationService } from 'src/app/service/authentication.service';
 import { Router, RouterStateSnapshot, ActivatedRoute } from '@angular/router';
 
@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
     private authentication: AuthenticationService) { }
 
   ngOnInit() {
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';    
   }
 
   async onSubmit() {
@@ -30,6 +30,5 @@ export class LoginComponent implements OnInit {
       this.router.navigate([this.returnUrl]);
 
     }
-    // var encrypted = this.set('0077', '{"T":"Rettpass"}');
   }
 }

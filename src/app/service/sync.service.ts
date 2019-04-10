@@ -15,7 +15,7 @@ interface SyncData {
 })
 export class SyncService {
   syncSteps = 0;
-  syncStepsMax = 3;
+  syncStepsMax = 4;
 
   constructor(private logger: LoggerService, private db: DatabaseService, private messageService: MessageService) {
   }
@@ -32,16 +32,20 @@ export class SyncService {
     doSend(p++);
     const buyItemsData = this.ToOnlySyncArray(await this.db.GetBuyItems());
     doSend(p++);
+    const usersData = this.ToOnlySyncArray(await this.db.GetUsers());
+    doSend(p++);
     // get all
 
     const httpData = await http('https://eydsla.strumpur.net/sync.php',
       {travels: travelData,
-      buyItems: buyItemsData});
+      buyItems: buyItemsData,
+      users: usersData
+    });
     doSend(p++);
 
     this.logger.log(httpData);
     for (let i = 0; i < httpData.travels.length; i++) {
-      await this.db.AddOrUpdateTravel(httpData.travels[i], true);
+      await this.db.AddOrUpdateTravelSecure(httpData.travels[i], true);
     }
     doSend(p++);
 
@@ -51,7 +55,7 @@ export class SyncService {
     doSend(p++);
 
     for (let i = 0; i < httpData.users.length; i++) {
-      await this.db.AddOrUpdateUser(httpData.users[i], true);
+      await this.db.AddOrUpdateUserSecure(httpData.users[i], true);
     }
     doSend(p++);
 

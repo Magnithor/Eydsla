@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { LoggerService } from './logger.service';
-import { Travel } from '../interface/travel';
+import { Travel, TravelSecure } from '../interface/travel';
 import { BuyItem } from '../interface/buy-item';
 import { Currency } from '../interface/currency';
 import { MessageService, MessageType } from './message.service';
 import { User, UserSecure } from '../interface/user';
+import { AuthenticationService } from './authentication.service';
+import { NewKey } from '../static/randomKey';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +48,7 @@ export class DatabaseService {
   }
 
   //#region Travel
-  public async AddOrUpdateTravel(travel: Travel, notUpdateNeedForSync?: boolean) {
+  public async AddOrUpdateTravelSecure(travel: TravelSecure, notUpdateNeedForSync: boolean) {
     if (!notUpdateNeedForSync) {
       travel.needToBeSync = true;
     }
@@ -298,7 +300,7 @@ export class DatabaseService {
   //#endregion
 
   //#region User
-  public async AddOrUpdateUser(user: User, notUpdateNeedForSync?: boolean) {
+  public async AddOrUpdateUserSecure(user: UserSecure, notUpdateNeedForSync?: boolean) {
     if (!notUpdateNeedForSync) {
       user.needToBeSync = true;
     }
@@ -337,6 +339,34 @@ export class DatabaseService {
           }
 
           resolve(null);
+        };
+
+        request.onerror = () => reject(request.error);
+      });
+    }
+    finally {
+      if (conn) { conn.close(); }
+    }
+  }
+
+  public async GetUsers(): Promise<UserSecure[]> {
+    let conn: IDBDatabase;
+    try {
+      conn = await this.OpenDb();
+      return await new Promise<UserSecure[]>((resolve, reject) => {
+        const tx = conn.transaction('user', 'readonly' );
+        const store = tx.objectStore('user');
+        const request = store.openCursor();
+        const arr = [];
+        request.onsuccess = () => {
+          const cursor = <IDBCursorWithValue> (request.result);
+          if (!cursor) {
+            resolve(arr);
+            return;
+          }
+
+          arr.push(cursor.value);
+          cursor.continue();
         };
 
         request.onerror = () => reject(request.error);

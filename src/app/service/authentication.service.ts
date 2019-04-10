@@ -1,79 +1,59 @@
 import { Injectable } from '@angular/core';
-import { takeUntil } from 'rxjs/operators';
 import { DatabaseService } from './database.service';
 import * as CryptoJS from 'crypto-js';
+import { Encryption } from './../static/encryption';
+import { User, UserData, UserSecure } from '../interface/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
 
+  private user:User;
   constructor(private database: DatabaseService) {
 
   }
 
   isLogin = false;
-  set(keys: string, value: string): string {
-    const key = CryptoJS.enc.Utf8.parse(keys);
-    const iv = CryptoJS.enc.Utf8.parse(keys);
-    const encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(value.toString()), key,
-    {
-        keySize: 128 / 8,
-        iv: iv,
-        mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7
-    });
-
-    return encrypted.toString();
-  }
-
-  setObject(keys: string, value: any): string {
-    return this.set(keys, JSON.stringify(value));
-  }
-
-  get(keys: string, value: string): string {
-    const key = CryptoJS.enc.Utf8.parse(keys);
-    const iv = CryptoJS.enc.Utf8.parse(keys);
-    const decrypted = CryptoJS.AES.decrypt(value, key, {
-        keySize: 128 / 8,
-        iv: iv,
-        mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7
-    });
-
-    return decrypted.toString(CryptoJS.enc.Utf8);
-  }
-
-  getObject(key: string, value: string): any {
-    return JSON.parse(this.get(key, value));
-  }
 
   public async login(user: string, pass: string): Promise<boolean> {
     this.isLogin = false;
+    this.user = null;
     let dataStr;
+    let userDb: UserSecure;
+    let encryption = new Encryption();
     try  {
-    const userDate = await this.database.GetUser(user);
-
-    dataStr = this.get(pass, userDate.secureData);
+      userDb = await this.database.GetUser(user);
+      dataStr = encryption.decrypt(userDb.secureData, pass);    
     } catch {
       return false;
     }
+
     if (!dataStr || dataStr === '') {
       return false;
     }
 
-    let userData;
     try {
-      userData = JSON.parse(dataStr);
+      const userData = <UserData>JSON.parse(dataStr);
+      this.user = {
+        _id: userDb._id,
+        lastUpdate: userDb.lastUpdate,
+        needToBeSync: userDb.needToBeSync,
+        username: userDb.username,
+        data: userData
+      };
     } catch {
       return false;
     }
 
-    if (userData) {
+    if (this.user) {
       this.isLogin = true;
-      return true;
-    } else {
-      return false;
-    }
+    } 
+      
+    return this.isLogin;    
+  }
+
+  getUser(): User {
+    return this.user;
   }
 }

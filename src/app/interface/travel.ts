@@ -14,8 +14,11 @@ export interface TravelPerson {
     name: string;
 }
 
+export interface TravelSecure extends Sync {
+    secureData: string;
+}
+
 export interface Travel extends Sync {
-    _id: string;
     key: string;
     name: string;
     from: Date;

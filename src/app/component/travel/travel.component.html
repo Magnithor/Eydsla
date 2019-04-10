@@ -1,70 +1,88 @@
-<div class="container-fluid">
-    <form class="form" #myForm>
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input [(ngModel)]="travel.name" type="text" class="form-control" name="name" id="name" aria-describedby="nameHelp" placeholder="Enter name">
-            <small #spy id="nameHelp" class="form-text text-muted" i18n="@@TravelNameHint">Name of the travel.</small>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="dateFrom">Frá</label>
-                <input [ngModel]="travel.from | date:'yyyy-MM-dd'" (ngModelChange)="travel.from = UpdateDate($event)" type="date" class="form-control" name="from" id="dateFrom" aria-describedat="dateFromHelp" placeholder="Date from">
-                <small id="dateFromHelp" class="form-text text-muted" i18n="@@TravelDateFromHint">Date from of the travel.</small>
+<div class="container-fluid" [ngSwitch]="guiSwitch">
+    <div *ngSwitchCase="'Travel'">
+        <form class="form" #myForm>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input [(ngModel)]="travel.name" type="text" class="form-control" name="name" id="name" aria-describedby="nameHelp" placeholder="Enter name">
+                <small #spy id="nameHelp" class="form-text text-muted" i18n="@@TravelNameHint">Name of the travel.</small>
             </div>
-            <div class="form-group col-md-6">
-                <label for="dateTo">To</label>
-                <input [ngModel]="travel.to | date:'yyyy-MM-dd'" (ngModelChange)="travel.to = UpdateDate($event)" type="date" class="form-control" name="to" id="dateTo" aria-describedat="dateToHelp" placeholder="Date to">
-                <small id="dateToHelp" class="form-text text-muted" i18n="@@TravelDatetToHint">Date to of the travel.</small>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="dateFrom">Frá</label>
+                    <input [ngModel]="travel.from | date:'yyyy-MM-dd'" (ngModelChange)="travel.from = UpdateDate($event)" type="date" class="form-control" name="from" id="dateFrom" aria-describedat="dateFromHelp" placeholder="Date from">
+                    <small id="dateFromHelp" class="form-text text-muted" i18n="@@TravelDateFromHint">Date from of the travel.</small>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="dateTo">To</label>
+                    <input [ngModel]="travel.to | date:'yyyy-MM-dd'" (ngModelChange)="travel.to = UpdateDate($event)" type="date" class="form-control" name="to" id="dateTo" aria-describedat="dateToHelp" placeholder="Date to">
+                    <small id="dateToHelp" class="form-text text-muted" i18n="@@TravelDatetToHint">Date to of the travel.</small>
+                </div>
             </div>
-        </div>
 
-        <h2>Category</h2>
-        <div class="ml-4">
-            <Button (click)="AddCategory()">AddCategory</Button>
+            <h2>Category</h2>
+            <div class="ml-4">
+                <Button (click)="AddCategory()">AddCategory</Button>
+                
+                <div *ngFor="let category of travel.categories" class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="categoryName{{category.id}}">Name</label>
+                        <input [(ngModel)]="category.name" type="text" class="form-control" name="categroyName{{category.id}}" id="categoryName{{category.id}}" placeholder="Enter name"/>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="categoryColor{{category.id}}">Color</label>
+                        <input [(ngModel)]="category.color" style="height: 38px;" type="color" class="form-control" name="categroyColor{{category.id}}" id="categoryColor{{category.id}}"/>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Currency</h2>
+            <div class="ml-4">
+                <select #currency>
+                    <option *ngFor="let currency of filterCurrencies" value="{{currency.id}}">{{currency.id}} - {{currency.describe}}</option>
+                </select> 
+                <button style="margin-left: 10px;" (click)="AddCurrency()">AddCurrency</button>
+                <table class="table" >
+                    <tr><th>Gjaldmiðil</th><th>Gengi</th></tr>
+                    <tr *ngFor="let currency of travel.currencies">
+                        <td>
+                            {{currency.id}}
+                        </td>
+                        <td>
+                            <input [(ngModel)]="currency.trade" name="currency_{{currency.id}}" type="number" class="form-control"  >
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <h2>Persons</h2>
+            <div class="ml-4">
+                <Button (click)="AddPerson()">Add Person</Button>
+                <div *ngFor="let p of travel.persons; let i = index" class="from-row">            
+                        <input [(ngModel)]="p.name" type="text" class="form-control" name="person{{i}}" id="person{{i}}"/>
+                </div>
+    
+            </div>
+            <br/>
+            <button type="button" class="btn btn-success" (click)="onSave()">Save</button>
+            <app-alert #alert></app-alert>
             
-            <div *ngFor="let category of travel.categories" class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="categoryName{{category.id}}">Name</label>
-                    <input [(ngModel)]="category.name" type="text" class="form-control" name="categroyName{{category.id}}" id="categoryName{{category.id}}" placeholder="Enter name"/>
+            <br>TODO: remove this: {{myForm.className}}
+        </form>
+    </div>
+    <div *ngSwitchCase="'login'">
+        <form class="form" (ngSubmit)="onLoginSubmit()">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text"  class="form-control"  />        
                 </div>
-                <div class="form-group col-md-6">
-                    <label for="categoryColor{{category.id}}">Color</label>
-                    <input [(ngModel)]="category.color" style="height: 38px;" type="color" class="form-control" name="categroyColor{{category.id}}" id="categoryColor{{category.id}}"/>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" #pass class="form-control"  />
                 </div>
-            </div>
-        </div>
-
-        <h2>Currency</h2>
-        <div class="ml-4">
-            <select #currency>
-                <option *ngFor="let currency of filterCurrencies" value="{{currency.id}}">{{currency.id}} - {{currency.describe}}</option>
-            </select> 
-            <button style="margin-left: 10px;" (click)="AddCurrency()">AddCurrency</button>
-            <table class="table" >
-                <tr><th>Gjaldmiðil</th><th>Gengi</th></tr>
-                <tr *ngFor="let currency of travel.currencies">
-                    <td>
-                        {{currency.id}}
-                    </td>
-                    <td>
-                        <input [(ngModel)]="currency.trade" name="currency_{{currency.id}}" type="number" class="form-control"  >
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <h2>Persons</h2>
-        <div class="ml-4">
-            <Button (click)="AddPerson()">Add Person</Button>
-            <div *ngFor="let p of travel.persons; let i = index" class="from-row">            
-                    <input [(ngModel)]="p.name" type="text" class="form-control" name="person{{i}}" id="person{{i}}"/>
-            </div>
-   
-        </div>
-        <br/>
-        <button type="button" class="btn btn-success" (click)="onSave()">Save</button>
-        <app-alert #alert></app-alert>
-        
-<br>TODO: remove this: {{myForm.className}}
-    </form>
+                <div class="form-group">
+                    <button [disabled]="loading" class="btn btn-primary">Login</button>
+                    <img *ngIf="loading" class="pl-3" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                </div>
+        </form>
+    </div>
 </div>
