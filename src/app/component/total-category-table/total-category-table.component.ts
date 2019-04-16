@@ -4,6 +4,7 @@ import { TravelCategory, Travel } from '../../interface/travel';
 import { BuyItem } from 'src/app/interface/buy-item';
 import { calcISK } from 'src/app/static/calcISK';
 import { getAfterDot, getThousundDot } from 'src/app/static/numbers';
+import { AuthenticationService } from 'src/app/service/authentication.service';
 
 @Component({
   selector: 'app-total-category-table',
@@ -25,7 +26,7 @@ export class TotalCategoryTableComponent {
   public travel: Travel;
 
 
-  constructor(private db: DatabaseService) { }
+  constructor(private auth: AuthenticationService, private db: DatabaseService) { }
   getAfterDot(value: number) {
     return getAfterDot(value);
   }
@@ -39,7 +40,7 @@ export class TotalCategoryTableComponent {
   }
 
   async getTravelId(id) {
-    this.travel = await this.db.GetTravel(id);
+    this.travel = await this.db.GetTravel(id, this.auth.getUser());
     const data = await this.db.GetBuyItemByTravelId(id);
     const result = {};
     let cat;

@@ -4,7 +4,8 @@ import { Observable, Subject } from 'rxjs';
 export enum MessageType {
   sync,
   travel,
-  setting
+  setting,
+  authenticate
 }
 export interface MessageTypeObject {
   type: MessageType;
@@ -21,7 +22,10 @@ export interface MessageSetting extends MessageTypeObject {
   key: string;
   value: any;
 }
-export type Message = MessageTypeSync | MessageTravel | MessageSetting;
+export interface MessageAuthenticate extends MessageTypeObject {
+  type: MessageType.authenticate
+}
+export type Message = MessageTypeSync | MessageTravel | MessageSetting | MessageAuthenticate;
 
 @Injectable({
   providedIn: 'root'

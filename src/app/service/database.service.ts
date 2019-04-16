@@ -7,6 +7,7 @@ import { MessageService, MessageType } from './message.service';
 import { User, UserSecure } from '../interface/user';
 import { AuthenticationService } from './authentication.service';
 import { NewKey } from '../static/randomKey';
+import { Encryption } from '../static/encryption';
 
 @Injectable({
   providedIn: 'root'
@@ -78,11 +79,12 @@ export class DatabaseService {
     }
   }
 
-  public async GetTravels(): Promise<Travel[]> {
+  public async GetTravels(user:User): Promise<Travel[]> {
     let conn: IDBDatabase;
     try {
       conn = await this.OpenDb();
       return await new Promise<Travel[]>((resolve, reject) => {
+        const encryption = new Encryption();
         const tx = conn.transaction('travel', 'readonly' );
         const store = tx.objectStore('travel');
         const request = store.openCursor();
@@ -93,8 +95,16 @@ export class DatabaseService {
             resolve(arr);
             return;
           }
+          const travelSecure = <TravelSecure>cursor.value;
+          const travelInfo = user.data.travels[travelSecure._id];
+          if (!travelInfo) {
+            return;
+          }
+          const t = JSON.parse(encryption.decrypt(travelSecure.secureData, travelInfo.key));
+          const data = {...travelSecure, ...t};
+          delete data.secureData;
 
-          arr.push(this.fixTravelItem(cursor.value));
+          arr.push(this.fixTravelItem(data));
           cursor.continue();
         };
 
@@ -106,8 +116,10 @@ export class DatabaseService {
     }
   }
 
-  public async GetTravel(id: string): Promise<Travel | null> {
+  public async GetTravel(id: string, user:User): Promise<Travel | null> {
     let conn: IDBDatabase;
+    const encryption = new Encryption();
+
     try {
       conn = await this.OpenDb();
       return await new Promise<Travel>((resolve, reject) => {
@@ -116,7 +128,13 @@ export class DatabaseService {
         const request = store.get(id);
         request.onsuccess = () => {
           if (request.result) {
-            resolve(this.fixTravelItem(request.result));
+            const travelSecure = <TravelSecure>request.result;
+            const t = JSON.parse(encryption.decrypt(travelSecure.secureData, user.data.travels[id].key));
+            const data = {...travelSecure, ...t};
+            delete data.secureData;
+
+
+            resolve(this.fixTravelItem(data));
           }
         };
 

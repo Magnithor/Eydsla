@@ -2,6 +2,7 @@ import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import { DatabaseService } from '../../../service/database.service';
 import { TravelCategory } from '../../../interface/travel';
 import { updateConvasSize } from '../../../static/canvas';
+import { AuthenticationService } from 'src/app/service/authentication.service';
 
 @Component({
   selector: 'app-pie',
@@ -29,7 +30,7 @@ export class PieComponent {
   public _travelId: string;
   public data: {total: number, data: any};
 
-  constructor(private db: DatabaseService) { }
+  constructor(private auth:AuthenticationService, private db: DatabaseService) { }
 
   public render() {
     const ctx = this.canvas.getContext('2d');
@@ -69,7 +70,7 @@ export class PieComponent {
   }
 
   async getTravelId(id) {
-    const travel = await this.db.GetTravel(id);
+    const travel = await this.db.GetTravel(id, this.auth.getUser());
     const data = await this.db.GetBuyItemByTravelId(id);
     const result = {};
     let cat;

@@ -6,6 +6,7 @@ import { LoggerService } from '../../service/logger.service';
 import { DatabaseService } from '../../service/database.service';
 import { AlertComponent } from '../alert/alert.component';
 import { LocalStorageService } from '../../service/local-storage.service';
+import { AuthenticationService } from 'src/app/service/authentication.service';
 
 @Component({
   selector: 'app-buy-item',
@@ -32,23 +33,23 @@ export class BuyItemComponent implements OnInit {
     return this._categoryColor;
   }
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router,
+  constructor(private auth:AuthenticationService, private activatedRoute: ActivatedRoute, private router: Router,
     private log: LoggerService, private db: DatabaseService,
     private localStorageService: LocalStorageService) {
     this.activatedRoute.paramMap.subscribe(async parm => {
       if (parm.has('id')) {
         const buyItem = await this.db.GetBuyItemById(parm.get('id'));
-        this.travel = await this.db.GetTravel(buyItem.travelId);
+        this.travel = await this.db.GetTravel(buyItem.travelId, this.auth.getUser());
         this.buyItem = buyItem;
       }  else {
         if (parm.has('travelId')) {
           const buyItem = NewBuyItem(parm.get('travelId'), 1);
-          this.travel = await this.db.GetTravel(buyItem.travelId);
+          this.travel = await this.db.GetTravel(buyItem.travelId, this.auth.getUser());
           this.buyItem = buyItem;
           this.setDeafultCurrency();
         } else {
           const travelId = await this.db.GetSettingItem('SelectTravel');
-          this.travel = await this.db.GetTravel(travelId);
+          this.travel = await this.db.GetTravel(travelId, this.auth.getUser());
           this.buyItem = NewBuyItem(travelId, 1);
           this.setDeafultCurrency();
         }

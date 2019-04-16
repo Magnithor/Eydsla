@@ -6,6 +6,7 @@ import { Travel, TravelCategory } from '../../interface/travel';
 import { InputConverter, BooleanConverter } from 'src/app/static/Convert';
 import { calcISK } from 'src/app/static/calcISK';
 import { getThousundDot, getAfterDot } from 'src/app/static/numbers';
+import { AuthenticationService } from 'src/app/service/authentication.service';
 
 @Component({
   selector: 'app-buy-items',
@@ -37,7 +38,7 @@ export class BuyItemsComponent implements OnInit {
   categories: TravelCategory[];
   currencies: {[index: string]: number};
 
-  constructor(private db: DatabaseService, private log: LoggerService) {
+  constructor(private auth: AuthenticationService, private db: DatabaseService, private log: LoggerService) {
     this.config = { showCurrency: false };
   }
 
@@ -45,7 +46,7 @@ export class BuyItemsComponent implements OnInit {
   }
 
   async getTravelId(id) {
-    this.travel = await this.db.GetTravel(id);
+    this.travel = await this.db.GetTravel(id, this.auth.getUser());
     const travel = this.travel;
     this.categories = [];
     this.currencies = {};

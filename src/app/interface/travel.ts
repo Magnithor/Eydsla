@@ -19,7 +19,6 @@ export interface TravelSecure extends Sync {
 }
 
 export interface Travel extends Sync {
-    key: string;
     name: string;
     from: Date;
     to: Date;
@@ -33,7 +32,6 @@ export interface Travel extends Sync {
 export function NewTravel(): Travel {
     return {
         _id: NewId(),
-        key: NewKey(),
         from: new Date(),
         to: new Date(),
         name: '',

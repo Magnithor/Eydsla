@@ -3,6 +3,7 @@ import { DatabaseService } from '../../service/database.service';
 import { Travel } from '../../interface/travel';
 import { Subscription } from 'rxjs';
 import { MessageService, Message, MessageType } from '../../service/message.service';
+import { AuthenticationService } from 'src/app/service/authentication.service';
 
 
 @Component({
@@ -16,7 +17,7 @@ export class MainComponent implements OnInit {
   public travel: Travel;
   public showPie = false;
   public showTotal = false;
-  constructor( private db: DatabaseService, private messageService: MessageService ) {
+  constructor(private auth:AuthenticationService, private db: DatabaseService, private messageService: MessageService ) {
     this.subscription = this.messageService.getMessage().subscribe(msg => this.OnMessage(msg));
   }
 
@@ -27,7 +28,7 @@ export class MainComponent implements OnInit {
   async update() {
     this.travelSelected = await this.db.GetSettingItem('SelectTravel');
     if (this.travelSelected) {
-      this.travel = await this.db.GetTravel(this.travelSelected);
+      this.travel = await this.db.GetTravel(this.travelSelected, this.auth.getUser());
     }
   }
 

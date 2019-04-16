@@ -51,18 +51,21 @@ export class NavComponent implements OnInit {
     switch (item.type) {
       case MessageType.travel:
       case MessageType.sync:
+      case MessageType.authenticate:
         this.reReload();
       break;
     }
   }
 
   async reReload() {
-    const travels = await this.db.GetTravels();
-    travels.sort((a, b) => b.from.getTime() - a.from.getTime());
-    this.travels = travels;
-    this._travelSelected = await this.db.GetSettingItem('SelectTravel');
-    if (this._travelSelected === null && travels.length > 0) {
-      this.travelSelected = travels[0]._id;
+    if (this.authenticationService.isLogin){
+      const travels = await this.db.GetTravels(this.authenticationService.getUser());
+      travels.sort((a, b) => b.from.getTime() - a.from.getTime());
+      this.travels = travels;
+      this._travelSelected = await this.db.GetSettingItem('SelectTravel');
+      if (this._travelSelected === null && travels.length > 0) {
+        this.travelSelected = travels[0]._id;
+      }
     }
   }
 }

@@ -4,6 +4,7 @@ import { LoggerService } from './logger.service';
 import { http } from '../static/http';
 import { Sync } from '../interface/sync';
 import { MessageService, MessageType } from './message.service';
+import { AuthenticationService } from './authentication.service';
 
 interface SyncData {
   hasChanged: Sync[];
@@ -17,7 +18,7 @@ export class SyncService {
   syncSteps = 0;
   syncStepsMax = 4;
 
-  constructor(private logger: LoggerService, private db: DatabaseService, private messageService: MessageService) {
+  constructor(private auth: AuthenticationService, private logger: LoggerService, private db: DatabaseService, private messageService: MessageService) {
   }
 
   async syncData(sendProgress?: (value, max) => void) {
@@ -28,7 +29,7 @@ export class SyncService {
       }
     };
 
-    const travelData = this.ToOnlySyncArray(await this.db.GetTravels());
+    const travelData = []; // this.ToOnlySyncArray(await this.db.GetTravels(this.auth.getUser()));
     doSend(p++);
     const buyItemsData = this.ToOnlySyncArray(await this.db.GetBuyItems());
     doSend(p++);

@@ -1,12 +1,13 @@
-import { Component, OnInit, ViewChild, NgModule } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Travel, NewTravel } from '../../interface/travel';
 import { LoggerService } from '../../service/logger.service';
 import { DatabaseService } from '../../service/database.service';
-import { switchMap } from 'rxjs/operators';
 import { AlertComponent } from '../alert/alert.component';
 import { Currency } from '../../interface/currency';
 import { AuthenticationService } from 'src/app/service/authentication.service';
+import { http } from 'src/app/static/http';
+import { Encryption } from 'src/app/static/encryption';
 
 @Component({
   selector: 'app-travel',
@@ -24,18 +25,27 @@ export class TravelComponent implements OnInit {
   public travel: Travel;
   public guiSwitch: String;
   public newItem: boolean;
+  public username: string;
+  public password: string;
+  public wrongUserNameOrPassword: boolean;
 
-  constructor(private auth:AuthenticationService, private route: ActivatedRoute, private log: LoggerService, private db: DatabaseService) {
+  constructor(
+    private auth: AuthenticationService,
+    private route: ActivatedRoute,
+    private log: LoggerService,
+    private db: DatabaseService) {
+    this.username = auth.getUser().username;
+    this.wrongUserNameOrPassword = false;
     this.currencies = this.db.GetCurrencies();
     this.route.paramMap.subscribe(async parm => {
       if (parm.has('id')) {
-        this.guiSwitch = "Travel";
-        this.travel = await this.db.GetTravel(parm.get('id'));
+        this.guiSwitch = 'Travel';
+        this.travel = await this.db.GetTravel(parm.get('id'), this.auth.getUser());
         this.Filter();
-        this.log.warn(parm.get('id'));
+        this.log.log(parm.get('id'));
         this.newItem = false;
       } else {
-        this.guiSwitch = "Travel";
+        this.guiSwitch = 'Travel';
         this.travel = NewTravel();
         this.newItem = true;
         this.Filter();
@@ -97,7 +107,7 @@ export class TravelComponent implements OnInit {
 
   async onSave() {
     if (this.newItem) {
-      this.guiSwitch = "login";
+      this.guiSwitch = 'login';
     } else {
 
     }
@@ -106,6 +116,26 @@ export class TravelComponent implements OnInit {
   }
 
   async onLoginSubmit() {
-    console.log("ll");
+    if (!(await this.auth.validPassword(this.password))) {
+      this.wrongUserNameOrPassword = true;
+      return;
+    }
+
+    this.wrongUserNameOrPassword = false;
+
+
+    const httpData = await http('https://eydsla.strumpur.net/NewTravel.php',
+    {
+      username: this.username,
+      travel: this.travel,
+      password: this.password
+    });
+    await this.db.AddOrUpdateUserSecure(httpData.user, true);
+    await this.auth.login(this.username, this.password);
+    await this.db.AddOrUpdateTravelSecure(httpData.travel, true);
+    this.newItem = false;
+    this.travel = await this.db.GetTravel(httpData.travel._id, this.auth.getUser());
+    this.guiSwitch = 'Travel';
+    this.alert.show('Saved');
   }
 }
