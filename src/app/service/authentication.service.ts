@@ -3,6 +3,7 @@ import { DatabaseService } from './database.service';
 import * as CryptoJS from 'crypto-js';
 import { Encryption } from './../static/encryption';
 import { User, UserData, UserSecure } from '../interface/user';
+import { http } from '../static/http';
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +60,21 @@ export class AuthenticationService {
     let userDb: UserSecure;
     try  {
       const encryption = new Encryption();
-      userDb = await this.database.GetUser(user);
+      if (navigator.onLine) {
+        try {
+          const httpData = await http('https://eydsla.strumpur.net/GetUser.php', {
+            username: user
+          });
+          userDb = httpData;
+          if (userDb) {
+            await this.database.AddOrUpdateUserSecure(userDb);
+          }
+        } catch {
+          userDb = await this.database.GetUser(user);
+        }
+      } else {
+        userDb = await this.database.GetUser(user);
+      }
       dataStr = encryption.decrypt(userDb.secureData, pass);
     } catch {
       return false;
