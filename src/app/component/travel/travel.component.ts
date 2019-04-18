@@ -7,7 +7,6 @@ import { AlertComponent } from '../alert/alert.component';
 import { Currency } from '../../interface/currency';
 import { AuthenticationService } from 'src/app/service/authentication.service';
 import { http } from 'src/app/static/http';
-import { Encryption } from 'src/app/static/encryption';
 
 @Component({
   selector: 'app-travel',
@@ -111,7 +110,8 @@ export class TravelComponent implements OnInit {
     } else {
 
     }
-    // await this.db.AddOrUpdateTravel(this.travel, this.auth.getUser());
+    
+    await this.db.UpdateTravel(this.travel, this.auth.getUser());
     this.alert.show('Saved');
   }
 
