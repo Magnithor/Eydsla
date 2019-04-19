@@ -18,7 +18,10 @@ export class SyncService {
   syncSteps = 0;
   syncStepsMax = 4;
 
-  constructor(private auth: AuthenticationService, private logger: LoggerService, private db: DatabaseService, private messageService: MessageService) {
+  constructor(private auth: AuthenticationService,
+    private logger: LoggerService,
+    private db: DatabaseService,
+    private messageService: MessageService) {
   }
 
   async syncData(sendProgress?: (value, max) => void) {
