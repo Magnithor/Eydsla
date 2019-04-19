@@ -23,7 +23,7 @@ export interface MessageSetting extends MessageTypeObject {
   value: any;
 }
 export interface MessageAuthenticate extends MessageTypeObject {
-  type: MessageType.authenticate
+  type: MessageType.authenticate;
 }
 export type Message = MessageTypeSync | MessageTravel | MessageSetting | MessageAuthenticate;
 

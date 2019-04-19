@@ -28,9 +28,9 @@ export class LoginComponent implements OnInit {
 
   async onSubmit() {
     const ok = await this.authentication.login('magni', '0077');
-    if (!ok) { 
-      this.wrongUserNameOrPassword  = true; 
-    } else {      
+    if (!ok) {
+      this.wrongUserNameOrPassword  = true;
+    } else {
       this.messageService.sendMessage({type: MessageType.authenticate});
       this.router.navigate([this.returnUrl]);
     }

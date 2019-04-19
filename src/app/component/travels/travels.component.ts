@@ -12,7 +12,7 @@ export class TravelsComponent implements OnInit {
 
   data: Travel[];
 
-  constructor(private auth:AuthenticationService, private db: DatabaseService) { }
+  constructor(private auth: AuthenticationService, private db: DatabaseService) { }
 
   async ngOnInit() {
     const travels = await this.db.GetTravels(this.auth.getUser());

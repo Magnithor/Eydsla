@@ -33,7 +33,7 @@ export class BuyItemComponent implements OnInit {
     return this._categoryColor;
   }
 
-  constructor(private auth:AuthenticationService, private activatedRoute: ActivatedRoute, private router: Router,
+  constructor(private auth: AuthenticationService, private activatedRoute: ActivatedRoute, private router: Router,
     private log: LoggerService, private db: DatabaseService,
     private localStorageService: LocalStorageService) {
     this.activatedRoute.paramMap.subscribe(async parm => {

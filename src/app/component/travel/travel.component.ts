@@ -110,7 +110,7 @@ export class TravelComponent implements OnInit {
     } else {
 
     }
-    
+
     await this.db.UpdateTravel(this.travel, this.auth.getUser());
     this.alert.show('Saved');
   }

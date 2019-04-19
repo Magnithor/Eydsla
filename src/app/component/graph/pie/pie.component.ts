@@ -30,7 +30,7 @@ export class PieComponent {
   public _travelId: string;
   public data: {total: number, data: any};
 
-  constructor(private auth:AuthenticationService, private db: DatabaseService) { }
+  constructor(private auth: AuthenticationService, private db: DatabaseService) { }
 
   public render() {
     const ctx = this.canvas.getContext('2d');

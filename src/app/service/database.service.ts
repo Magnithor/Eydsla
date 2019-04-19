@@ -89,12 +89,12 @@ export class DatabaseService {
       await new Promise((resolve, reject) => {
         const tx = conn.transaction('travel', 'readwrite' );
         const store = tx.objectStore('travel');
-        let key = user.data.travels[travel._id].key;
-        let secure = Object.assign({}, travel);
+        const key = user.data.travels[travel._id].key;
+        const secure = Object.assign({}, travel);
         delete secure._id;
         delete secure.needToBeSync;
         delete secure.lastUpdate;
-        let travelSecure:TravelSecure = {
+        const travelSecure: TravelSecure = {
           _id: travel._id,
           needToBeSync: true,
           lastUpdate: travel.lastUpdate,
@@ -105,7 +105,7 @@ export class DatabaseService {
           this.logger.log(request.result);
           resolve(request.result);
           this.messageService.sendMessage({type: MessageType.travel, id: travel._id});
- 
+
           };
         request.onerror = () => {
           this.logger.error(request.error);
@@ -118,7 +118,7 @@ export class DatabaseService {
     }
   }
 
-  public async GetTravels(user:User): Promise<Travel[]> {
+  public async GetTravels(user: User): Promise<Travel[]> {
     let conn: IDBDatabase;
     try {
       conn = await this.OpenDb();
@@ -155,7 +155,7 @@ export class DatabaseService {
     }
   }
 
-  public async GetTravel(id: string, user:User): Promise<Travel | null> {
+  public async GetTravel(id: string, user: User): Promise<Travel | null> {
     let conn: IDBDatabase;
     const encryption = new Encryption();
 

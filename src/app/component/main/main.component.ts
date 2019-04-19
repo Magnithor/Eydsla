@@ -17,7 +17,7 @@ export class MainComponent implements OnInit {
   public travel: Travel;
   public showPie = false;
   public showTotal = false;
-  constructor(private auth:AuthenticationService, private db: DatabaseService, private messageService: MessageService ) {
+  constructor(private auth: AuthenticationService, private db: DatabaseService, private messageService: MessageService ) {
     this.subscription = this.messageService.getMessage().subscribe(msg => this.OnMessage(msg));
   }
 
