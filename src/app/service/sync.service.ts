@@ -24,7 +24,7 @@ export class SyncService {
     private messageService: MessageService) {
   }
 
-  async syncData(sendProgress?: (value, max) => void) {
+  async syncData(username:string, password:string, sendProgress?: (value, max) => void) {
     let p = 1;
     const doSend = function(v) {
       if (sendProgress) {
@@ -41,10 +41,13 @@ export class SyncService {
     // get all
 
     const httpData = await http('https://eydsla.strumpur.net/sync.php',
-      {travels: travelData,
-      buyItems: buyItemsData,
-      users: usersData
-    });
+      {
+        username: username,
+        password: password,
+        travels: travelData,
+        buyItems: buyItemsData,
+        users: usersData
+      });
     doSend(p++);
 
     this.logger.log(httpData);

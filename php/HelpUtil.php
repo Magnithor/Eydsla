@@ -1,5 +1,14 @@
 <?php
 // https://gist.github.com/ve3/0f77228b174cf92a638d81fddb17189d
+header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Headers: *");
+header("Access-Control-Allow-Credentials", "true");
+header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit();
+}
+
 require 'Encryption.php';
 
 function GetDb(){
@@ -34,8 +43,8 @@ function GetUser($mng, $user) {
 }
 
 function GetUserData($userDb, $password) {
-    $Encryption = new Encryption();
-    $dataStr = $Encryption->decrypt($userDb->secureData, $password);
+    $encryption = new Encryption();
+    $dataStr = $encryption->decrypt($userDb->secureData, $password);
     if (!isset($dataStr) || trim($dataStr) == "") {
             http_response_code(500);
             exit("pass");

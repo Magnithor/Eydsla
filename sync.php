@@ -1,7 +1,7 @@
 <?php
+    require 'HelpUtil.php';
     // http://zetcode.com/db/mongodbphp/
-    header('Access-Control-Allow-Origin: *');
-    $mng = new MongoDB\Driver\Manager("mongodb://localhost:27017");
+    $mng = GetDb();
     $data = json_decode(file_get_contents('php://input'));
 
     $userDb = GetUser($mng, $data->username);
@@ -41,19 +41,6 @@
         $query = new MongoDB\Driver\Query($filter);  
         $res = $mng->executeQuery("eydsla.".$table, $query); 
         return $res->toArray();  
-    }
-
-    function fixToJson($data) {
-        foreach ($data as $key => $value) {
-            if ($value instanceof MongoDB\BSON\UTCDateTime) {
-                $data->{$key} = $value->toDateTime()->format('Y-m-d\TH:i:s\Z');
-            } else {
-                if ($value instanceof MongoDB\BSON\ObjectId) {
-                    $data->{$key} = $value->__toString();
-                }
-            }
-        }
-        return $data;
     }
 
     function sync($mng, $table, $data, $time) {

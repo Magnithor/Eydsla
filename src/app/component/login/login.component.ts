@@ -27,20 +27,18 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
-
+  enterOnUser() {
+    this.pass.nativeElement.focus();
+    return false;
+  }
   async onSubmit() {
-
-    let ok;
     let user = this.user.nativeElement.value;
     let pass = this.pass.nativeElement.value;
-    if (user === "") { user = 'magni';}
-    if (pass === "") { pass = '0077';}
-    //if (this.user)
-    try {
-    ok = await this.authentication.login(user, pass);
-    } catch {
-      ok = false;
-    }
+    if (user === '') { user = 'magni'; }
+    if (pass === '') { pass = '0077'; }
+
+    const ok = await this.authentication.login(user, pass);
+
     if (!ok) {
       this.wrongUserNameOrPassword  = true;
     } else {

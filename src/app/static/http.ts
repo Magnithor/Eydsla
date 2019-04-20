@@ -1,8 +1,8 @@
 
 export function http(url: string, data): Promise<any> {
     return new Promise((resolve, reject) => {
-        try{
-            const xhr = new XMLHttpRequest();        
+        try {
+            const xhr = new XMLHttpRequest();
             xhr.open('POST', url, true);
             xhr.timeout = 2000;
             xhr.onreadystatechange = () => {
@@ -13,10 +13,10 @@ export function http(url: string, data): Promise<any> {
             };
             xhr.onabort = () => {
                 reject();
-            }
+            };
             xhr.ontimeout = ()  => {
                 reject();
-            }
+            };
             xhr.onerror = () => {
                 reject();
             };

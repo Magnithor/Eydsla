@@ -4,6 +4,7 @@ import * as CryptoJS from 'crypto-js';
 import { Encryption } from './../static/encryption';
 import { User, UserData, UserSecure } from '../interface/user';
 import { http } from '../static/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import { http } from '../static/http';
 export class AuthenticationService {
 
   private user: User;
-  constructor(private database: DatabaseService) {
+  constructor(private httpClient: HttpClient, private database: DatabaseService) {
 
   }
 
@@ -53,7 +54,7 @@ export class AuthenticationService {
     return false;
   }
 
-  public async login(user: string, pass: string): Promise<boolean> {
+  public async login(user: string, pass: string, getFromNet: boolean = true): Promise<boolean> {
     this.isLogin = false;
     this.user = null;
     let dataStr;
@@ -62,10 +63,11 @@ export class AuthenticationService {
       const encryption = new Encryption();
       if (navigator.onLine) {
         try {
-          const httpData = await http('https://eydsla.strumpur.net/GetUser.php', {
-            username: user
-          });
-          userDb = httpData;
+          if (getFromNet) {
+           userDb = await this.httpClient.post<UserSecure>(
+            'https://eydsla.strumpur.net/GetUser.php',
+            { username: user }).toPromise();
+          }
           if (userDb) {
             await this.database.AddOrUpdateUserSecure(userDb);
           }

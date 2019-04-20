@@ -19,6 +19,8 @@ import { DatetimePickerComponent } from './component/datetime-picker/datetime-pi
 import { PieComponent } from './component/graph/pie/pie.component';
 import { TotalCategoryTableComponent } from './component/total-category-table/total-category-table.component';
 import { LoginComponent } from './component/login/login.component';
+import { HttpClientModule } from '@angular/common/http';
+import { AutoFocusDirective } from './directive/auto-focus.directive';
 
 @NgModule({
   declarations: [
@@ -34,10 +36,12 @@ import { LoginComponent } from './component/login/login.component';
     DatetimePickerComponent,
     PieComponent,
     TotalCategoryTableComponent,
-    LoginComponent
+    LoginComponent,
+    AutoFocusDirective
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     FormsModule,
     AppRoutingModule,
     ScrollingModule,

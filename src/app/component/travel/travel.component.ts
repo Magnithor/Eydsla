@@ -108,11 +108,9 @@ export class TravelComponent implements OnInit {
     if (this.newItem) {
       this.guiSwitch = 'login';
     } else {
-
+      await this.db.UpdateTravel(this.travel, this.auth.getUser());
+      this.alert.show('Saved');  
     }
-
-    await this.db.UpdateTravel(this.travel, this.auth.getUser());
-    this.alert.show('Saved');
   }
 
   async onLoginSubmit() {
@@ -123,15 +121,15 @@ export class TravelComponent implements OnInit {
 
     this.wrongUserNameOrPassword = false;
 
-
     const httpData = await http('https://eydsla.strumpur.net/NewTravel.php',
     {
       username: this.username,
       travel: this.travel,
       password: this.password
     });
+
     await this.db.AddOrUpdateUserSecure(httpData.user, true);
-    await this.auth.login(this.username, this.password);
+    await this.auth.login(this.username, this.password, false);
     await this.db.AddOrUpdateTravelSecure(httpData.travel, true);
     this.newItem = false;
     this.travel = await this.db.GetTravel(httpData.travel._id, this.auth.getUser());
