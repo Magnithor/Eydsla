@@ -4,6 +4,9 @@
     $mng = new MongoDB\Driver\Manager("mongodb://localhost:27017");
     $data = json_decode(file_get_contents('php://input'));
 
+    $userDb = GetUser($mng, $data->username);
+    $userData = GetUserData($userDb, $data->password);
+
     $result = new stdClass();
 
     $time = new MongoDB\BSON\UTCDateTime(time()*1000);
@@ -17,19 +20,22 @@
         return $res->toArray();  
     }
 
-    function GetAllDataExist($mng, $table, $ids, $maxDate) {
+    function GetAllDataExist($mng, $table, $ids, $maxDate, $extrafilter) {
         // echo (new MongoDB\BSON\UTCDateTime(strtotime($maxDate)));
         
-        if (isset($maxDate)) {
-            $filter = [ '$and' => array( [ '_id' => [ '$nin'  => $ids ]]
-            , 
-            ['lastUpdate'=>['$gt'=> new MongoDB\BSON\UTCDateTime(strtotime($maxDate)*1000)]] 
-         )]; 
-        ;
-        } else {
-            $filter = [ '$and' => array( [ '_id' => [ '$nin'  => $ids ]] )]; 
+        $and = array([ '_id' => [ '$nin'  => $ids ]]);
+        if (isset($extrafilter)) {
+            array_push($and, $extrafilter);
         }
 
+        if (isset($maxDate)) {
+            array_push($and,
+                ['lastUpdate' => ['$gt' => new MongoDB\BSON\UTCDateTime(strtotime($maxDate)*1000)]]
+            );
+         )]; 
+        }
+
+        $filter = [ '$and' => $and ];
         //print_r($filter);
 
         $query = new MongoDB\Driver\Query($filter);  
@@ -81,8 +87,8 @@
         return $result;
     }
 
-    $result->travels = sync($mng, "travel", $data->travels, $time);
-    $result->buyItems = sync($mng, "buyItem", $data->buyItems, $time);
+    $result->travels = sync($mng, "travel", $data->travels, $time, ["_id" => ["in" => array_keys($userData->travels)]]);
+    $result->buyItems = sync($mng, "buyItem", $data->buyItems, $time, ["travelId" => [ "in" => array_keys($userData->travels)]]);
     $result->users = sync($mng, "user", $data->users, $time);
 
     echo(json_encode($result));

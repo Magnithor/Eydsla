@@ -5,13 +5,15 @@ import { AuthenticationService } from 'src/app/service/authentication.service';
 import { Router, RouterStateSnapshot, ActivatedRoute } from '@angular/router';
 import { MessageService, MessageType } from 'src/app/service/message.service';
 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  @ViewChild('pass') el: any;
+  @ViewChild('user') user: any;
+  @ViewChild('pass') pass: any;
   loading = false;
   submitted = false;
   returnUrl: string;
@@ -27,7 +29,18 @@ export class LoginComponent implements OnInit {
   }
 
   async onSubmit() {
-    const ok = await this.authentication.login('magni', '0077');
+
+    let ok;
+    let user = this.user.nativeElement.value;
+    let pass = this.pass.nativeElement.value;
+    if (user === "") { user = 'magni';}
+    if (pass === "") { pass = '0077';}
+    //if (this.user)
+    try {
+    ok = await this.authentication.login(user, pass);
+    } catch {
+      ok = false;
+    }
     if (!ok) {
       this.wrongUserNameOrPassword  = true;
     } else {

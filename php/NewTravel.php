@@ -25,9 +25,9 @@ $travelDb = new stdClass();
 $travelDb->_id = (new MongoDB\BSON\ObjectId($data->travel->_id));      
 $travelDb->needToBeSync = false;
 $travelDb->lastUpdate = new MongoDB\BSON\UTCDateTime(time() * 1000);
-$travelDb->secureData = $Encryption->encrypt(json_encode($travelSecure), $travelKey);
+$travelDb->secureData = $Encryption->encrypt(json_encode($travelSecure), $travelKey); 
 
- 
+$mng->in
 
 $result = array(
         'travel' => fixToJson($travelDb),
