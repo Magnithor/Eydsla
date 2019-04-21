@@ -8,6 +8,6 @@ require 'HelpUtil.php';
 $mng = GetDb();
 $data = json_decode(file_get_contents('php://input'));
 
-echo(json_encode(GetUser($mng, $data->username)));
+echo(json_encode(fixToJson(GetUser($mng, $data->username))));
 
 ?>

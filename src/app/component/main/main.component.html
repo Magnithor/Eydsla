@@ -1,4 +1,4 @@
-<div class="container-fluid" *ngIf="travel">
+<div class="container-fluid" *ngIf="hasTravel">
     <h3>{{travel?.name}}</h3>
     <hr/>
     <div class="btn-toolbar" role="toolbar">
@@ -14,6 +14,6 @@
     <app-pie *ngIf="showPie" travelId="{{travelSelected}}"></app-pie>
     <app-buy-items showAdd="false" travelId="{{travelSelected}}"></app-buy-items>
 </div>
-<div  class="container-fluid" *ngIf="!travel">
+<div  class="container-fluid" *ngIf="!hasTravel">
 <h3><a [routerLink]="['/EditTravel']" routerLinkActive="router-link-active" >New travel</a></h3>
 </div>

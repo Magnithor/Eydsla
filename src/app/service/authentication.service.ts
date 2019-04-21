@@ -12,11 +12,18 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class AuthenticationService {
 
   private user: User;
-  constructor(private httpClient: HttpClient, private database: DatabaseService) {
-
+  isLogin = false;
+  constructor(private httpClient: HttpClient, private database: DatabaseService) {    
+    const authString = sessionStorage.getItem("Authentication");
+    if (authString){
+      this.user = JSON.parse(authString);
+      if (this.user) {
+        this.isLogin = true;
+      }
+    }
   }
 
-  isLogin = false;
+  
 
   public async validPassword(pass: string): Promise<boolean> {
     let dataStr;
@@ -69,7 +76,7 @@ export class AuthenticationService {
             { username: user }).toPromise();
           }
           if (userDb) {
-            await this.database.AddOrUpdateUserSecure(userDb);
+            await this.database.AddOrUpdateUserSecure(userDb, true);
           }
         } catch {
           userDb = await this.database.GetUser(user);
@@ -78,11 +85,13 @@ export class AuthenticationService {
         userDb = await this.database.GetUser(user);
       }
       dataStr = encryption.decrypt(userDb.secureData, pass);
-    } catch {
+    } catch(e) {
+      console.log("Fail to Get user or decrypt " + e);
       return false;
     }
 
     if (!dataStr || dataStr === '') {
+      console.log("dataStr is empty");
       return false;
     }
 
@@ -95,7 +104,10 @@ export class AuthenticationService {
         username: userDb.username,
         data: userData
       };
+      
+      sessionStorage.setItem("Authentication", JSON.stringify(this.user));
     } catch {
+      console.log("Error to parse " + dataStr);
       return false;
     }
 
@@ -104,6 +116,12 @@ export class AuthenticationService {
     }
 
     return this.isLogin;
+  }
+
+  logout() {
+    sessionStorage.removeItem("Authentication");
+    this.user = null;
+    this.isLogin = false;
   }
 
   getUser(): User {

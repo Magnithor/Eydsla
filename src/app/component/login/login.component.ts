@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, isDevMode } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Encryption} from './../../static/encryption';
 import { AuthenticationService } from 'src/app/service/authentication.service';
@@ -34,9 +34,10 @@ export class LoginComponent implements OnInit {
   async onSubmit() {
     let user = this.user.nativeElement.value;
     let pass = this.pass.nativeElement.value;
-    if (user === '') { user = 'magni'; }
-    if (pass === '') { pass = '0077'; }
-
+    if (isDevMode()) {
+      if (user === '') { user = 'magni'; }
+      if (pass === '') { pass = '0077'; }
+    }
     const ok = await this.authentication.login(user, pass);
 
     if (!ok) {

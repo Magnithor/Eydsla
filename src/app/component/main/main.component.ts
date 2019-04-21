@@ -17,6 +17,7 @@ export class MainComponent implements OnInit {
   public travel: Travel;
   public showPie = false;
   public showTotal = false;
+  public hasTravel = true;
   constructor(private auth: AuthenticationService, private db: DatabaseService, private messageService: MessageService ) {
     this.subscription = this.messageService.getMessage().subscribe(msg => this.OnMessage(msg));
   }
@@ -26,9 +27,12 @@ export class MainComponent implements OnInit {
   }
 
   async update() {
+    this.hasTravel = true;
     this.travelSelected = await this.db.GetSettingItem('SelectTravel');
     if (this.travelSelected) {
       this.travel = await this.db.GetTravel(this.travelSelected, this.auth.getUser());
+    } else {
+      this.hasTravel = false;
     }
   }
 

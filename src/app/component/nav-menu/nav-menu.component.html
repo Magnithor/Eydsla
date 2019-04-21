@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" *ngIf="authenticationService.isLogin">
-  <a class="navbar-brand" routerLink="/" (click)="hide()">Eyðsla 0.3</a>
+  <a class="navbar-brand" routerLink="/" (click)="hide()">Eyðsla 0.4</a>
   <button class="navbar-toggler" type="button" (click)="showHide()" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -21,6 +21,9 @@
           <!--<div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#">Something else here</a>-->
         </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/Login" (click)="logout()">Útskraning</a>
       </li>
       <!--
       <li class="nav-item">

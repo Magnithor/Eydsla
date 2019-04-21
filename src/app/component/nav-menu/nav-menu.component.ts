@@ -47,6 +47,11 @@ export class NavComponent implements OnInit {
     this.collapse = true;
   }
 
+  public logout() {
+    this.authenticationService.logout();
+    this.hide();
+  }
+
   OnMessage(item: Message) {
     switch (item.type) {
       case MessageType.travel:

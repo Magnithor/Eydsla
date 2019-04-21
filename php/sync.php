@@ -9,10 +9,9 @@
     $userData = GetUserData($userDb, $data->password);
     $travelIds = array();
     foreach ($userData->travels as $key => $value) {
-        array_push($travelIds, $key);
+        array_push($travelIds, new MongoDB\BSON\ObjectId($key));
     }
-    echo( array_keys($userData->travels));
-
+   
     $result = new stdClass();
 
     $time = new MongoDB\BSON\UTCDateTime(time()*1000);
@@ -42,7 +41,8 @@
         if (count($data->hasChanged) > 0) {
             $bulk = new MongoDB\Driver\BulkWrite;
             for ($i=0; $i < count($data->hasChanged); $i++) {
-                $item = $data->hasChanged[$i];            
+                $item = $data->hasChanged[$i]; 
+                $item->_id = new MongoDB\BSON\ObjectId($item->_id);           
                 $res = GetData($mng, $table, $item->_id);
                 $item->lastUpdate = $time;
                 $item->needToBeSync = false;

@@ -19,14 +19,18 @@ export class DatabaseService {
   //#region OpenDb and update if need
   private OpenDb(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open('Eydsla', 1);
+      const request = indexedDB.open('Eydsla', 2);
       request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
         const db = <IDBDatabase>(request.result);
-        const travel = db.createObjectStore('travel');
-        const buyItem = db.createObjectStore('buyItem');
-        buyItem.createIndex('travelId', 'travelId');
-        db.createObjectStore('setting');
-        db.createObjectStore('user');
+        if (event.oldVersion < 1) {
+          const travel = db.createObjectStore('travel');
+          const buyItem = db.createObjectStore('buyItem');
+          buyItem.createIndex('travelId', 'travelId');
+          db.createObjectStore('setting');
+        }
+        if (event.oldVersion < 2) {
+          db.createObjectStore('user');
+        }
       };
 
       request.onsuccess = () => resolve(request.result);
