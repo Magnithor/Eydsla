@@ -56,7 +56,7 @@ export class BuyItemsComponent implements OnInit {
     for (let i = 0; i < travel.currencies.length; i++) {
       this.currencies[travel.currencies[i].id] = travel.currencies[i].trade;
     }
-    const data  = await this.db.GetBuyItemByTravelId(id);
+    const data  = await this.db.GetBuyItemByTravelId(id, this.auth.getUser());
     data.sort((a, b) => b.date.getTime() - a.date.getTime());
     this.data = data;
   }

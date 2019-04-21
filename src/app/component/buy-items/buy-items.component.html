@@ -13,7 +13,7 @@
     </div> 
       <cdk-virtual-scroll-viewport itemSize="20" autosize style="Height:150px">
         <div *cdkVirtualFor="let item of data" class="rTableRow">
-          <div class="rTableCell"><a [routerLink]="['/EditBuyItem', item._id]" routera>{{empty(item.caption)}}</a></div> 
+          <div class="rTableCell"><a [routerLink]="['/EditBuyItem', item._id]">{{empty(item.caption)}}</a></div> 
           <div class="rTableCell">{{dateToStr(item.date)}}</div>
           <div class="rTableCell">{{categoryToStr(item.category)}}</div>
           <div class="rTableCell">{{item.price}}</div> 
@@ -31,7 +31,7 @@
         <tr><th>Name</th><th>Date</th><th>category</th><th colspan="2">Price</th><th *ngIf="config.showCurrency">Gengi</th><th>ISK</th></tr>
       </thead>
       <tr *ngFor="let item of data" >
-        <td><a [routerLink]="['/EditBuyItem', item._id]" routera>{{empty(item.caption)}}</a></td> 
+        <td><a [routerLink]="['/EditBuyItem', item._id]">{{empty(item.caption)}}</a></td> 
         <td>{{dateToStr(item.date)}}</td>
         <td>{{categoryToStr(item.category)}}</td>
         <td style="text-align: right; padding-right: 0px;">{{getThousundDot(item.price)}}</td>

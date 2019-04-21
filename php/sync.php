@@ -29,19 +29,24 @@
         }
 
         $filter = [ '$and' => $and];
+        // echo($table);
+
+        // print_r($filter);
 
         $query = new MongoDB\Driver\Query($filter);  
         $res = $mng->executeQuery("eydsla.".$table, $query); 
         return $res->toArray();  
     }
 
-    function sync($mng, $table, $data, $time) {
+    function sync($mng, $table, $data, $time, $extrafilter) {
         $result = array();
         $ids = array();
+        $hashset = array();
         if (count($data->hasChanged) > 0) {
             $bulk = new MongoDB\Driver\BulkWrite;
             for ($i=0; $i < count($data->hasChanged); $i++) {
                 $item = $data->hasChanged[$i]; 
+                $id = $item->_id;
                 $item->_id = new MongoDB\BSON\ObjectId($item->_id);           
                 $res = GetData($mng, $table, $item->_id);
                 $item->lastUpdate = $time;
@@ -53,13 +58,13 @@
                 }
 
                 array_push($result, fixToJson($item));
-                array_push($ids, $item->_id);
+                array_push($ids, $id);
             }
 
             $mng->executeBulkWrite("eydsla.".$table, $bulk);
         }
     
-        $list = GetAllDataExist($mng, $table, $ids, $data->newestSyncData);
+        $list = GetAllDataExist($mng, $table, $ids, $data->newestSyncData, $extrafilter);
         for($i=0;$i < count($list); $i++) {
             array_push($result, fixToJson($list[$i]));
         }

@@ -1,17 +1,19 @@
-<form class="form">
-  <div class="form-group">
-      <label for="username">Username</label>
-      <input name="username" type="text"  readonly [ngModel]="username" class="form-control"  />        
-  </div>
-  <div class="form-group">
-      <label for="password">Password</label>
-      <input type="password" name="password" #pass class="form-control" [(ngModel)]="password" />
-  </div>
-  <div *ngIf="wrongUserNameOrPassword" class="alert alert-danger">Wrong uesrname or password</div>
-</form>
+<div class="container-fluid">
+  <form class="form">
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input name="username" type="text"  readonly [ngModel]="username" class="form-control"  />        
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" name="password" #pass class="form-control" [(ngModel)]="password" />
+    </div>
+    <div *ngIf="wrongUserNameOrPassword" class="alert alert-danger">Wrong uesrname or password</div>
+  </form>
 
-<button (click)="doSync()">Sync</button>
+  <button (click)="doSync()">Sync</button>
 
-<div class="progress">
+  <div class="progress">
     <div class="progress-bar bg-success" role="progressbar" [style.width.%]="syncPercent" ></div>
   </div>
+</div>

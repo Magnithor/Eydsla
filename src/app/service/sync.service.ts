@@ -32,9 +32,9 @@ export class SyncService {
       }
     };
 
-    const travelData = []; // this.ToOnlySyncArray(await this.db.GetTravels(this.auth.getUser()));
+    const travelData = this.ToOnlySyncArray(await this.db.GetTravelSecures(this.auth.getUser()));
     doSend(p++);
-    const buyItemsData = this.ToOnlySyncArray(await this.db.GetBuyItems());
+    const buyItemsData = this.ToOnlySyncArray(await this.db.GetBuyItemSecures(this.auth.getUser()));
     doSend(p++);
     const usersData = this.ToOnlySyncArray(await this.db.GetUsers());
     doSend(p++);
@@ -52,17 +52,17 @@ export class SyncService {
 
     this.logger.log(httpData);
     for (let i = 0; i < httpData.travels.length; i++) {
-      await this.db.AddOrUpdateTravelSecure(httpData.travels[i], true);
+      await this.db.AddOrUpdateTravelSecure(httpData.travels[i]);
     }
     doSend(p++);
 
     for (let i = 0; i < httpData.buyItems.length; i++) {
-      await this.db.AddOrUpdateBuyItem(httpData.buyItems[i], true);
+      await this.db.AddOrUpdateBuyItemSecure(httpData.buyItems[i]);
     }
     doSend(p++);
 
     for (let i = 0; i < httpData.users.length; i++) {
-      await this.db.AddOrUpdateUserSecure(httpData.users[i], true);
+      await this.db.AddOrUpdateUserSecure(httpData.users[i]);
     }
     doSend(p++);
 

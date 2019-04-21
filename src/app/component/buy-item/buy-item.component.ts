@@ -38,7 +38,7 @@ export class BuyItemComponent implements OnInit {
     private localStorageService: LocalStorageService) {
     this.activatedRoute.paramMap.subscribe(async parm => {
       if (parm.has('id')) {
-        const buyItem = await this.db.GetBuyItemById(parm.get('id'));
+        const buyItem = await this.db.GetBuyItemById(parm.get('id'), this.auth.getUser());
         this.travel = await this.db.GetTravel(buyItem.travelId, this.auth.getUser());
         this.buyItem = buyItem;
       }  else {
@@ -90,7 +90,7 @@ export class BuyItemComponent implements OnInit {
   }
 
   async onSave() {
-    await this.db.AddOrUpdateBuyItem(this.buyItem);
+    await this.db.AddOrUpdateBuyItem(this.buyItem, this.auth.getUser());
     this.localStorageService.setValue('DefaultCurrency', this.buyItem.currency);
     this.alert.show('Saved');
     this.router.navigate(['']);

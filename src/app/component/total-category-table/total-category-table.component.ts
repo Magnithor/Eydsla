@@ -41,7 +41,7 @@ export class TotalCategoryTableComponent {
 
   async getTravelId(id) {
     this.travel = await this.db.GetTravel(id, this.auth.getUser());
-    const data = await this.db.GetBuyItemByTravelId(id);
+    const data = await this.db.GetBuyItemByTravelId(id, this.auth.getUser());
     const result = {};
     let cat;
     let total = 0;

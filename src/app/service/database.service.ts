@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LoggerService } from './logger.service';
 import { Travel, TravelSecure } from '../interface/travel';
-import { BuyItem } from '../interface/buy-item';
+import { BuyItem, BuyItemSecure } from '../interface/buy-item';
 import { Currency } from '../interface/currency';
 import { MessageService, MessageType } from './message.service';
 import { User, UserSecure } from '../interface/user';
@@ -48,16 +48,13 @@ export class DatabaseService {
       { id: 'CAD', describe: '$ canada'},
       { id: 'SEK', describe: 'Sænskar króur'},
       { id: 'USD', describe: '$ US'},
-      { id: 'GPB', describe: 'Pond'}
+      { id: 'GPB', describe: 'Pond'},
+      { id: 'EUR', describe: 'Evra'}
      ];
   }
 
   //#region Travel
-  public async AddOrUpdateTravelSecure(travel: TravelSecure, notUpdateNeedForSync: boolean) {
-    if (!notUpdateNeedForSync) {
-      travel.needToBeSync = true;
-    }
-
+  public async AddOrUpdateTravelSecure(travel: TravelSecure) {
     let conn: IDBDatabase;
     try {
       conn = await this.OpenDb();
@@ -68,9 +65,6 @@ export class DatabaseService {
         request.onsuccess = () => {
           this.logger.log(request.result);
           resolve(request.result);
-          if (!notUpdateNeedForSync) {
-            this.messageService.sendMessage({type: MessageType.travel, id: travel._id});
-          }
         };
         request.onerror = () => {
           this.logger.error(request.error);
@@ -85,6 +79,7 @@ export class DatabaseService {
 
   public async UpdateTravel(travel: Travel, user: User) {
     travel.needToBeSync = true;
+    travel.lastUpdate = new Date();
     const encryption = new Encryption();
 
     let conn: IDBDatabase;
@@ -159,6 +154,41 @@ export class DatabaseService {
     }
   }
 
+  public async GetTravelSecures(user: User): Promise<TravelSecure[]> {
+    let conn: IDBDatabase;
+    try {
+      conn = await this.OpenDb();
+      return await new Promise<TravelSecure[]>((resolve, reject) => {
+        const encryption = new Encryption();
+        const tx = conn.transaction('travel', 'readonly' );
+        const store = tx.objectStore('travel');
+        const request = store.openCursor();
+        const arr = [];
+        request.onsuccess = () => {
+          const cursor = <IDBCursorWithValue> (request.result);
+          if (!cursor) {
+            resolve(arr);
+            return;
+          }
+          const travelSecure = <TravelSecure>cursor.value;
+          const travelInfo = user.data.travels[travelSecure._id];
+          if (!travelInfo) {
+            cursor.continue();
+            return;
+          }
+
+          arr.push(travelSecure);
+          cursor.continue();
+        };
+
+        request.onerror = () => reject(request.error);
+      });
+    }
+    finally {
+      if (conn) { conn.close(); }
+    }
+  }
+
   public async GetTravel(id: string, user: User): Promise<Travel | null> {
     let conn: IDBDatabase;
     const encryption = new Encryption();
@@ -176,7 +206,6 @@ export class DatabaseService {
             const data = {...travelSecure, ...t};
             delete data.secureData;
 
-
             resolve(this.fixTravelItem(data));
           }
         };
@@ -191,16 +220,54 @@ export class DatabaseService {
   //#endregion
 
   //#region BuyItem
-  public async AddOrUpdateBuyItem(buyItem: BuyItem, notUpdateNeedForSync?: boolean) {
-    if (!notUpdateNeedForSync) {
-      buyItem.needToBeSync = true;
-    }
+  public async AddOrUpdateBuyItem(buyItem: BuyItem, user: User) {
+    buyItem.needToBeSync = true;
+    buyItem.lastUpdate = new Date();
+    const encryption = new Encryption();
+
     let conn: IDBDatabase;
     try {
       conn = await this.OpenDb();
       await new Promise((resolve, reject) => {
         const tx = conn.transaction('buyItem', 'readwrite' );
         const store = tx.objectStore('buyItem');
+
+        const key = user.data.travels[buyItem.travelId].key;
+        const secure = Object.assign({}, buyItem);
+        delete secure._id;
+        delete secure.needToBeSync;
+        delete secure.lastUpdate;
+        delete secure.travelId;
+        const buyItemSecure: BuyItemSecure = {
+          _id: buyItem._id,
+          travelId: buyItem.travelId,
+          needToBeSync: true,
+          lastUpdate: new Date(),
+          secureData: encryption.encrypt(JSON.stringify(secure), key)
+        };
+
+        const request = store.put(buyItemSecure, buyItem._id);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+    finally {
+      if (conn) { conn.close(); }
+    }
+  }
+
+  public async AddOrUpdateBuyItemSecure(buyItem: BuyItem) {
+    buyItem.needToBeSync = true;
+    buyItem.lastUpdate = new Date();
+    const encryption = new Encryption();
+
+    let conn: IDBDatabase;
+    try {
+      conn = await this.OpenDb();
+      await new Promise((resolve, reject) => {
+        const tx = conn.transaction('buyItem', 'readwrite' );
+        const store = tx.objectStore('buyItem');
+
         const request = store.put(buyItem, buyItem._id);
         request.onsuccess = () => resolve(request.result);
         request.onerror = () => reject(request.error);
@@ -211,11 +278,11 @@ export class DatabaseService {
     }
   }
 
-  public async GetBuyItems(): Promise<BuyItem[]> {
+  public async GetBuyItemSecures(user: User): Promise<BuyItemSecure[]> {
     let conn: IDBDatabase;
     try {
       conn = await this.OpenDb();
-      return await new Promise<BuyItem[]>((resolve, reject) => {
+      return await new Promise<BuyItemSecure[]>((resolve, reject) => {
         const tx = conn.transaction('buyItem', 'readonly' );
         const store = tx.objectStore('buyItem');
         const request = store.openCursor();
@@ -227,7 +294,11 @@ export class DatabaseService {
             return;
           }
 
-          arr.push(this.fixBuyItem(cursor.value));
+          const value: BuyItemSecure = cursor.value;
+          if (user.data.travels[value.travelId]) {
+            arr.push(cursor.value);
+          }
+
           cursor.continue();
         };
 
@@ -259,8 +330,9 @@ export class DatabaseService {
     return value;
   }
 
-  public async GetBuyItemByTravelId(id: string): Promise<BuyItem[]> {
+  public async GetBuyItemByTravelId(id: string, user: User): Promise<BuyItem[]> {
     let conn: IDBDatabase;
+    const encryption = new Encryption();
     try {
       conn = await this.OpenDb();
       return await new Promise<BuyItem[]>((resolve, reject) => {
@@ -276,7 +348,11 @@ export class DatabaseService {
             return;
           }
 
-          arr.push(this.fixBuyItem(cursor.value));
+          const buyItemSecure: BuyItemSecure = cursor.value;
+          const t = JSON.parse(encryption.decrypt(buyItemSecure.secureData, user.data.travels[id].key));
+          const data = {...buyItemSecure, ...t};
+          delete data.secureData;
+          arr.push(this.fixBuyItem(data));
           cursor.continue();
         };
 
@@ -288,8 +364,9 @@ export class DatabaseService {
     }
   }
 
-  public async GetBuyItemById(id: string): Promise<BuyItem | null> {
+  public async GetBuyItemById(id: string, user: User): Promise<BuyItem | null> {
     let conn: IDBDatabase;
+    const encryption = new Encryption();
     try {
       conn = await this.OpenDb();
       return await new Promise<BuyItem>((resolve, reject) => {
@@ -298,7 +375,11 @@ export class DatabaseService {
         const request = store.get(id);
         request.onsuccess = () => {
           if (request.result) {
-            resolve(this.fixBuyItem(request.result));
+            const buyItemSecure: BuyItemSecure = request.result;
+            const t = JSON.parse(encryption.decrypt(buyItemSecure.secureData, user.data.travels[buyItemSecure.travelId].key));
+            const data = {...buyItemSecure, ...t};
+            delete data.secureData;
+            resolve(this.fixBuyItem(data));
           }
 
           resolve(null);

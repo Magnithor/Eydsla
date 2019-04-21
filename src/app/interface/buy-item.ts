@@ -23,6 +23,11 @@ export interface BuyItem extends Sync {
     personsSpent?: (PersonSpentPrice | PersonSpentPercent)[];
 }
 
+export interface BuyItemSecure extends Sync {
+    travelId: string;
+    secureData: string;
+}
+
 export function NewBuyItem(travelId: string, userId: number): BuyItem {
     return {
         _id: NewId(),

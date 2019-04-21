@@ -1,5 +1,5 @@
 <div class="container-fluid" *ngIf="hasTravel">
-    <h3>{{travel?.name}}</h3>
+    <h3>{{travel?.name}}<a *ngIf="travel" style="margin-left: 20px" class="fa fa-edit"[routerLink]="['/EditTravel', travel?._id]"></a></h3>
     <hr/>
     <div class="btn-toolbar" role="toolbar">
         <div class="btn-group mb-2" role="group" style="padding-right:10px">

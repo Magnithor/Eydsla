@@ -130,7 +130,7 @@ export class TravelComponent implements OnInit {
 
     await this.db.AddOrUpdateUserSecure(httpData.user, true);
     await this.auth.login(this.username, this.password, false);
-    await this.db.AddOrUpdateTravelSecure(httpData.travel, true);
+    await this.db.AddOrUpdateTravelSecure(httpData.travel);
     this.newItem = false;
     this.travel = await this.db.GetTravel(httpData.travel._id, this.auth.getUser());
     this.guiSwitch = 'Travel';
