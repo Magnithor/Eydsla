@@ -24,7 +24,7 @@ export class SyncService {
     private messageService: MessageService) {
   }
 
-  async syncData(username:string, password:string, sendProgress?: (value, max) => void) {
+  async syncData(username: string, password: string, sendProgress?: (value, max) => void) {
     let p = 1;
     const doSend = function(v) {
       if (sendProgress) {

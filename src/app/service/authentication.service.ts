@@ -13,17 +13,15 @@ export class AuthenticationService {
 
   private user: User;
   isLogin = false;
-  constructor(private httpClient: HttpClient, private database: DatabaseService) {    
-    const authString = sessionStorage.getItem("Authentication");
-    if (authString){
+  constructor(private httpClient: HttpClient, private database: DatabaseService) {
+    const authString = sessionStorage.getItem('Authentication');
+    if (authString) {
       this.user = JSON.parse(authString);
       if (this.user) {
         this.isLogin = true;
       }
     }
   }
-
-  
 
   public async validPassword(pass: string): Promise<boolean> {
     let dataStr;
@@ -85,13 +83,13 @@ export class AuthenticationService {
         userDb = await this.database.GetUser(user);
       }
       dataStr = encryption.decrypt(userDb.secureData, pass);
-    } catch(e) {
-      console.log("Fail to Get user or decrypt " + e);
+    } catch (e) {
+      console.log('Fail to Get user or decrypt ' + e);
       return false;
     }
 
     if (!dataStr || dataStr === '') {
-      console.log("dataStr is empty");
+      console.log('dataStr is empty');
       return false;
     }
 
@@ -104,10 +102,10 @@ export class AuthenticationService {
         username: userDb.username,
         data: userData
       };
-      
-      sessionStorage.setItem("Authentication", JSON.stringify(this.user));
+
+      sessionStorage.setItem('Authentication', JSON.stringify(this.user));
     } catch {
-      console.log("Error to parse " + dataStr);
+      console.log('Error to parse ' + dataStr);
       return false;
     }
 
@@ -119,7 +117,7 @@ export class AuthenticationService {
   }
 
   logout() {
-    sessionStorage.removeItem("Authentication");
+    sessionStorage.removeItem('Authentication');
     this.user = null;
     this.isLogin = false;
   }

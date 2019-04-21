@@ -17,9 +17,9 @@ export class SyncComponent implements OnInit {
   syncPercent = 0;
   constructor(
     private auth: AuthenticationService,
-    private sync: SyncService) { 
+    private sync: SyncService) {
       this.username = auth.getUser().username;
-      this.wrongUserNameOrPassword = false;  
+      this.wrongUserNameOrPassword = false;
     }
 
   ngOnInit() {

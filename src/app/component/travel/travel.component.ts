@@ -109,7 +109,7 @@ export class TravelComponent implements OnInit {
       this.guiSwitch = 'login';
     } else {
       await this.db.UpdateTravel(this.travel, this.auth.getUser());
-      this.alert.show('Saved');  
+      this.alert.show('Saved');
     }
   }
 
