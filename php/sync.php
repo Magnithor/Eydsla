@@ -9,7 +9,7 @@
     $userData = GetUserData($userDb, $data->password);
     $travelIds = array();
     foreach ($userData->travels as $key => $value) {
-        array_push($travelIds, new MongoDB\BSON\ObjectId($key));
+        array_push($travelIds, $key);
     }
    
     $result = new stdClass();
@@ -75,7 +75,7 @@
 
     $result->t = $travelIds;
     $result->travels = sync($mng, "travel", $data->travels, $time, ['_id' => ['$in' => $travelIds]]);
-    $result->buyItems = sync($mng, "buyItem", $data->buyItems, $time, ['_travelId' => ['$in' => $travelIds]]);
+    $result->buyItems = sync($mng, "buyItem", $data->buyItems, $time, ['travelId' => ['$in' => $travelIds]]);
     $result->users = sync($mng, "user", $data->users, $time);
 
     echo(json_encode($result));

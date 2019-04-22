@@ -15,22 +15,26 @@
 
         <app-datetime-picker [(Value)]="buyItem.date"></app-datetime-picker>
           
-        <div class="form-row">
+        <div class="form-row" style="margin-Top: 10px">
             <div class="form-group col-md-6">
-                <label for="currency">Currency</label><label class="float-right" (click)="showEditCurrencyValue=true;">{{buyItem.currencyValue}}</label>
-                <select [(ngModel)]="buyItem.currency" name="currency" id="currency" class="form-control" (change)="currencyChange()">
-                    <option *ngFor="let currency of travel?.currencies" [ngValue]="currency.id"> {{currency.id}} </option>
-                </select>
-
-                <input type="number" class="form-control" name="currencyValue" [(ngModel)]="buyItem.currencyValue" *ngIf="showEditCurrencyValue">
+                <mat-form-field style="width:100%"> 
+                    <mat-label>Currency</mat-label>
+                    <mat-select [(value)]="buyItem.currency" name="currency" id="currency"  (change)="currencyChange()">
+                        <mat-option *ngFor="let currency of travel?.currencies" [value]="currency.id"> {{currency.id}} </mat-option>
+                    </mat-select>
+                </mat-form-field>
             </div>
 
             <div class="form-group col-md-6">
-                <label for="category">Category <div style="width:10px;height:10px;display: inline-block;" [style.backgroundColor]="categoryColor"></div></label>
-                <select (change)="UpdateColor()" [(ngModel)]="buyItem.category" name="category" id="category" class="form-control">
-                    <option *ngFor="let category of travel?.categories" [ngValue]="category.id" [style.backgroundColor]="category.color" style="mix-blend-mode: difference">{{category.name}}</option>
-                </select>
-                <small  id="categoryHelp" class="form-text text-muted" i18n="@@BuyItemCategoryHint">Category of the item.</small>    
+                <mat-form-field style="width:100%"> 
+                    <mat-label>Category</mat-label>
+                    <mat-select [(value)]="buyItem.category" name="category" id="category"  (selectionChange)="UpdateColor()">
+                        <mat-select-trigger>
+                            <div [style.backgroundColor]="categoryColor"  style="height:20px; width:20px; display: inline-block"></div> {{categoryName}} 
+                        </mat-select-trigger>
+                        <mat-option *ngFor="let category of travel?.categories" [value]="category.id"><div [style.backgroundColor]="category.color" style="height:20px; width:20px; display: inline-block"></div> {{category.name}} </mat-option>
+                    </mat-select>
+                </mat-form-field>            
             </div>
 
         </div>

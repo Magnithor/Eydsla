@@ -23,6 +23,8 @@ export class BuyItemComponent implements OnInit {
   pricePersonSum: number;
   personSum: number;
   showEditCurrencyValue = false;
+  // public categoryColor: string;
+  public categoryName: string;
 
   private _categoryColor: string;
   @Input()
@@ -99,16 +101,20 @@ export class BuyItemComponent implements OnInit {
   UpdateColor(): void  {
     if (this.buyItem.category === null || this.buyItem.category === undefined) {
       this.categoryColor = null;
+      this.categoryName = null;
       return;
     }
 
     for (let i = 0; i < this.travel.categories.length; i++) {
       if (this.travel.categories[i].id === this.buyItem.category) {
         this.categoryColor = this.travel.categories[i].color;
+        this.categoryName = this.travel.categories[i].name;
         return;
       }
     }
+
     this.categoryColor = null;
+    this.categoryName = null;
   }
 
   UpdatePeopleFilter() {

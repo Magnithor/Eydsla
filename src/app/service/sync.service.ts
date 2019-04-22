@@ -66,13 +66,12 @@ export class SyncService {
     }
     doSend(p++);
 
-
     this.messageService.sendMessage({type: MessageType.sync});
   }
 
   private ToOnlySyncArray(data: Sync[]): SyncData {
     const list: Sync[] = [];
-    let newestDate: Date;
+    let newestDate: Date = new Date(1979, 0, 13, 1, 1, 1, 1);
     data.forEach(element => {
       if (element.needToBeSync) {
         list.push(element);

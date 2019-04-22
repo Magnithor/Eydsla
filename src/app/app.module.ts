@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ScrollingModule } from '@angular/cdk/scrolling';
@@ -22,6 +23,8 @@ import { LoginComponent } from './component/login/login.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AutoFocusDirective } from './directive/auto-focus.directive';
 
+import {MatSelectModule} from '@angular/material/select';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,6 +44,8 @@ import { AutoFocusDirective } from './directive/auto-focus.directive';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
+    MatSelectModule,
     HttpClientModule,
     FormsModule,
     AppRoutingModule,
