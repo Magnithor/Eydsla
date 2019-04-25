@@ -24,6 +24,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AutoFocusDirective } from './directive/auto-focus.directive';
 
 import {MatSelectModule} from '@angular/material/select';
+import { ChangePasswordComponent } from './component/change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import {MatSelectModule} from '@angular/material/select';
     PieComponent,
     TotalCategoryTableComponent,
     LoginComponent,
-    AutoFocusDirective
+    AutoFocusDirective,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule,

@@ -7,10 +7,12 @@ import { SyncComponent } from './component/sync/sync.component';
 import { BuyItemComponent } from './component/buy-item/buy-item.component';
 import { LoginComponent } from './component/login/login.component';
 import { AuthGuard } from './authGuard';
+import { ChangePasswordComponent } from './component/change-password/change-password.component';
 
 const routes: Routes = [
   { path: '', component: MainComponent, canActivate: [AuthGuard]},
   { path: 'Login', component: LoginComponent},
+  { path: 'ChangePassword', component: ChangePasswordComponent, canActivate: [AuthGuard]},
   { path: 'New', component: BuyItemComponent, canActivate: [AuthGuard]},
   { path: 'New/:travelId', component: BuyItemComponent, canActivate: [AuthGuard]},
   { path: 'EditBuyItem/:id', component: BuyItemComponent, canActivate: [AuthGuard]},

@@ -10,9 +10,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AuthenticationService {
-
   private user: User;
   isLogin = false;
+
   constructor(private httpClient: HttpClient, private database: DatabaseService) {
     const authString = sessionStorage.getItem('Authentication');
     if (authString) {
@@ -83,6 +83,65 @@ export class AuthenticationService {
         userDb = await this.database.GetUser(user);
       }
       dataStr = encryption.decrypt(userDb.secureData, pass);
+    } catch (e) {
+      console.log('Fail to Get user or decrypt ' + e);
+      return false;
+    }
+
+    if (!dataStr || dataStr === '') {
+      console.log('dataStr is empty');
+      return false;
+    }
+
+    try {
+      const userData = <UserData>JSON.parse(dataStr);
+      this.user = {
+        _id: userDb._id,
+        lastUpdate: userDb.lastUpdate,
+        needToBeSync: userDb.needToBeSync,
+        username: userDb.username,
+        data: userData
+      };
+
+      sessionStorage.setItem('Authentication', JSON.stringify(this.user));
+    } catch {
+      console.log('Error to parse ' + dataStr);
+      return false;
+    }
+
+    if (this.user) {
+      this.isLogin = true;
+    }
+
+    return this.isLogin;
+  }
+
+  async changePassword(password: string, newPassword: string): Promise<boolean> {
+    let dataStr;
+    let userDb;
+    try  {
+      const encryption = new Encryption();
+      if (navigator.onLine) {
+        try {
+           userDb = await this.httpClient.post<UserSecure>(
+            'https://eydsla.strumpur.net/ChangePassword.php',
+            { username: this.user.username,
+              password: password,
+              newPassword: newPassword
+             }).toPromise();
+          
+          if (userDb) {
+            await this.database.AddOrUpdateUserSecure(userDb, true);
+          } else {
+            return false;
+          }
+        } catch {
+          return 
+        }
+      } else {
+        return false;
+      }
+      dataStr = encryption.decrypt(userDb.secureData, newPassword);
     } catch (e) {
       console.log('Fail to Get user or decrypt ' + e);
       return false;
