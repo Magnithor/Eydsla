@@ -136,6 +136,7 @@ export class DatabaseService {
           const travelSecure = <TravelSecure>cursor.value;
           const travelInfo = user.data.travels[travelSecure._id];
           if (!travelInfo) {
+            cursor.continue();
             return;
           }
           const t = JSON.parse(encryption.decrypt(travelSecure.secureData, travelInfo.key));
@@ -194,6 +195,11 @@ export class DatabaseService {
     const encryption = new Encryption();
 
     try {
+      if (!user.data.travels[id]) {
+        return null;
+      }
+
+      const key =  user.data.travels[id].key;
       conn = await this.OpenDb();
       return await new Promise<Travel>((resolve, reject) => {
         const tx = conn.transaction('travel', 'readonly' );
@@ -202,7 +208,7 @@ export class DatabaseService {
         request.onsuccess = () => {
           if (request.result) {
             const travelSecure = <TravelSecure>request.result;
-            const t = JSON.parse(encryption.decrypt(travelSecure.secureData, user.data.travels[id].key));
+            const t = JSON.parse(encryption.decrypt(travelSecure.secureData, key));
             const data = {...travelSecure, ...t};
             delete data.secureData;
 

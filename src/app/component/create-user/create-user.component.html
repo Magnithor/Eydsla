@@ -1,0 +1,34 @@
+<div class="container-fluid">
+    <form class="form">
+      <div class="form-group">
+          <label for="username">Notendanafn</label>
+          <input name="username" readonly type="text" [(ngModel)]="username" class="form-control" />
+      </div>
+      <div class="form-group">
+            <label for="password">Gamla lykilorðið</label> <mat-error *ngIf="wrongUserNameOrPassword">Wrong uesrname or password</mat-error>
+            <input type="password" name="oldPassword" #pass class="form-control" [(ngModel)]="password" />
+      </div>
+
+      <hr />
+  
+      <div class="form-group">
+           <label for="newUsername">Nýtt notendanafn</label>
+           <input name="newUsername" type="text" [(ngModel)]="newUsername" class="form-control" />
+      </div>
+      <div class="form-group">
+          <label for="password">Nýja lykilorðið</label>
+          <input type="password" name="newPassword1" #pass class="form-control" [(ngModel)]="newPassword1" />
+      </div>
+      <div class="form-group">
+          <label for="password">Nýja lykilorðið aftur</label> <mat-error *ngIf="newPasswordNotSame">Lykilorðin eru ekki eins</mat-error>
+          <input type="password" name="newPassword2" #pass class="form-control" [(ngModel)]="newPassword2" />
+      </div>
+
+      <mat-checkbox *ngFor="let item of travels"  name="item._id" [(ngModel)]="item.checked">{{item.name}} [{{item.from | date}} - {{item.to | date}}]</mat-checkbox>
+      
+    </form>
+  
+    <button (click)="createUser()">Stofna</button>
+    
+    <mat-error *ngIf="unableToCreateUser">Ekki tókst að búa til nýja notenda</mat-error>
+  </div>

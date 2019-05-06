@@ -22,6 +22,19 @@ function GetData($mng, $table, $id) {
     return $res->toArray();  
 }
 
+function HasUser($mng, $user) {
+    $regex = new MongoDB\BSON\Regex ( '^'.$user.'$','i');
+    $filter = [ 'username' =>  $regex ]; 
+    $query = new MongoDB\Driver\Query($filter);  
+    $res = $mng->executeQuery("eydsla.user", $query); 
+    $dbResult = $res->toArray();
+
+    if (sizeof($dbResult) != 0) {
+        http_response_code(500);
+        exit("user found");
+    }
+}
+
 function GetUser($mng, $user) {
     $regex = new MongoDB\BSON\Regex ( '^'.$user.'$','i');
     $filter = [ 'username' =>  $regex ]; 

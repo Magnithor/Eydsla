@@ -7,7 +7,6 @@ import { AuthenticationService } from 'src/app/service/authentication.service';
   styleUrls: ['./change-password.component.css']
 })
 export class ChangePasswordComponent implements OnInit {
-
   public username: string;
   public password: string;
   public wrongUserNameOrPassword: boolean;
@@ -16,7 +15,7 @@ export class ChangePasswordComponent implements OnInit {
   public newPasswordNotSame: boolean;
   public unableToChangePassword: boolean;
   constructor(private auth: AuthenticationService) {
-    this.username = auth.getUser().username;
+    this.username = auth.getUser().username;    
     this.wrongUserNameOrPassword = false;
     this.newPasswordNotSame = false;
     this.unableToChangePassword = false;

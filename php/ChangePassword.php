@@ -8,6 +8,7 @@ $data = json_decode(file_get_contents('php://input'));
 $userDb = GetUser($mng, $data->username);
 $userData = GetUserData($userDb, $data->password);
 
+$Encryption = new Encryption();
 $userDb->secureData = $Encryption->encrypt(json_encode($userData), $data->newPassword);
 
 $bulk = new MongoDB\Driver\BulkWrite;

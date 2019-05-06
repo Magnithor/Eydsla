@@ -46,7 +46,15 @@ export class BuyItemsComponent implements OnInit {
   }
 
   async getTravelId(id) {
+    if (!id || id === ""){
+      return;
+    }
+
     this.travel = await this.db.GetTravel(id, this.auth.getUser());
+    if (!this.travel) {
+      return;
+    }
+
     const travel = this.travel;
     this.categories = [];
     this.currencies = {};

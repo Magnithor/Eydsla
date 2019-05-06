@@ -23,8 +23,10 @@ import { LoginComponent } from './component/login/login.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AutoFocusDirective } from './directive/auto-focus.directive';
 
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox'
 import { ChangePasswordComponent } from './component/change-password/change-password.component';
+import { CreateUserComponent } from './component/create-user/create-user.component';
 
 @NgModule({
   declarations: [
@@ -42,12 +44,14 @@ import { ChangePasswordComponent } from './component/change-password/change-pass
     TotalCategoryTableComponent,
     LoginComponent,
     AutoFocusDirective,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    CreateUserComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     MatSelectModule,
+    MatCheckboxModule,
     HttpClientModule,
     FormsModule,
     AppRoutingModule,

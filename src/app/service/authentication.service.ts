@@ -5,6 +5,7 @@ import { Encryption } from './../static/encryption';
 import { User, UserData, UserSecure } from '../interface/user';
 import { http } from '../static/http';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { stringify } from '@angular/core/src/render3/util';
 
 @Injectable({
   providedIn: 'root'
@@ -72,9 +73,12 @@ export class AuthenticationService {
            userDb = await this.httpClient.post<UserSecure>(
             'https://eydsla.strumpur.net/GetUser.php',
             { username: user }).toPromise();
+            if (userDb) {
+              await this.database.AddOrUpdateUserSecure(userDb, true);
+            }  
           }
-          if (userDb) {
-            await this.database.AddOrUpdateUserSecure(userDb, true);
+          else {
+            userDb = await this.database.GetUser(user);
           }
         } catch {
           userDb = await this.database.GetUser(user);
@@ -116,7 +120,7 @@ export class AuthenticationService {
     return this.isLogin;
   }
 
-  async changePassword(password: string, newPassword: string): Promise<boolean> {
+  public async changePassword(password: string, newPassword: string): Promise<boolean> {
     let dataStr;
     let userDb;
     try  {
@@ -173,6 +177,32 @@ export class AuthenticationService {
     }
 
     return this.isLogin;
+  }
+
+  public async createUser(password: string, newUsername: string, newPassword: string, travels: {[index: string]: string}): Promise<boolean> {
+    let dataStr;
+    let userDb;
+    try {
+      userDb = await this.httpClient.post<UserSecure>(
+        'https://eydsla.strumpur.net/CreateUser.php',
+        { username: this.user.username,
+          password: password,
+          newUsername: newUsername,
+          newPassword: newPassword,
+          data: {travels: travels}
+          }).toPromise();
+          
+      if (userDb) {
+        await this.database.AddOrUpdateUserSecure(userDb, true);
+      } else {
+        return false;
+      }
+    } catch (e) {
+      console.log('Fail to create user' + e);
+      return false;
+    }
+
+    return true;
   }
 
   logout() {

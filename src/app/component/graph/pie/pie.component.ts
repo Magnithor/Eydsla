@@ -70,6 +70,10 @@ export class PieComponent {
   }
 
   async getTravelId(id) {
+    if (!id || id === ""){
+      return;
+    }
+    
     const travel = await this.db.GetTravel(id, this.auth.getUser());
     const data = await this.db.GetBuyItemByTravelId(id, this.auth.getUser());
     const result = {};
