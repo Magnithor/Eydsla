@@ -15,7 +15,7 @@ export class ChangePasswordComponent implements OnInit {
   public newPasswordNotSame: boolean;
   public unableToChangePassword: boolean;
   constructor(private auth: AuthenticationService) {
-    this.username = auth.getUser().username;    
+    this.username = auth.getUser().username;
     this.wrongUserNameOrPassword = false;
     this.newPasswordNotSame = false;
     this.unableToChangePassword = false;
@@ -40,7 +40,7 @@ export class ChangePasswordComponent implements OnInit {
     this.newPasswordNotSame = false;
     this.wrongUserNameOrPassword = false;
 
-    if (!(await this.auth.changePassword(this.password, this.newPassword1))){
+    if (!(await this.auth.changePassword(this.password, this.newPassword1))) {
       this.unableToChangePassword = true;
       return;
     }

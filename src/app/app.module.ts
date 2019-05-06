@@ -24,7 +24,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AutoFocusDirective } from './directive/auto-focus.directive';
 
 import { MatSelectModule } from '@angular/material/select';
-import { MatCheckboxModule } from '@angular/material/checkbox'
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ChangePasswordComponent } from './component/change-password/change-password.component';
 import { CreateUserComponent } from './component/create-user/create-user.component';
 

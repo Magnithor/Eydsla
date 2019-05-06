@@ -75,9 +75,8 @@ export class AuthenticationService {
             { username: user }).toPromise();
             if (userDb) {
               await this.database.AddOrUpdateUserSecure(userDb, true);
-            }  
-          }
-          else {
+            }
+          } else {
             userDb = await this.database.GetUser(user);
           }
         } catch {
@@ -133,14 +132,14 @@ export class AuthenticationService {
               password: password,
               newPassword: newPassword
              }).toPromise();
-          
+
           if (userDb) {
             await this.database.AddOrUpdateUserSecure(userDb, true);
           } else {
             return false;
           }
         } catch {
-          return 
+          return false;
         }
       } else {
         return false;
@@ -179,8 +178,8 @@ export class AuthenticationService {
     return this.isLogin;
   }
 
-  public async createUser(password: string, newUsername: string, newPassword: string, travels: {[index: string]: string}): Promise<boolean> {
-    let dataStr;
+  public async createUser(password: string, newUsername: string, newPassword: string,
+    travels: {[index: string]: string}): Promise<boolean> {
     let userDb;
     try {
       userDb = await this.httpClient.post<UserSecure>(
@@ -191,7 +190,7 @@ export class AuthenticationService {
           newPassword: newPassword,
           data: {travels: travels}
           }).toPromise();
-          
+
       if (userDb) {
         await this.database.AddOrUpdateUserSecure(userDb, true);
       } else {

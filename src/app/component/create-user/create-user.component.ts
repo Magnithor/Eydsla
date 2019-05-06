@@ -4,7 +4,7 @@ import { AuthenticationService } from 'src/app/service/authentication.service';
 import { DatabaseService } from 'src/app/service/database.service';
 
 interface TravelCheck extends Travel {
-  checked:boolean;
+  checked: boolean;
 }
 @Component({
   selector: 'app-create-user',
@@ -12,8 +12,6 @@ interface TravelCheck extends Travel {
   styleUrls: ['./create-user.component.css']
 })
 export class CreateUserComponent implements OnInit {
-  
-
   travels: TravelCheck[];
   public username: string;
   public password: string;
@@ -24,7 +22,7 @@ export class CreateUserComponent implements OnInit {
   public newPasswordNotSame: boolean;
   public unableToCreateUser: boolean;
 
-  constructor(private auth: AuthenticationService, private db: DatabaseService) { 
+  constructor(private auth: AuthenticationService, private db: DatabaseService) {
     this.username = auth.getUser().username;
     this.wrongUserNameOrPassword = false;
     this.newPasswordNotSame = false;
@@ -56,20 +54,19 @@ export class CreateUserComponent implements OnInit {
     this.newPasswordNotSame = false;
     this.wrongUserNameOrPassword = false;
 
-    let grantTravels: {[index: string]: string} = {};
+    const grantTravels: {[index: string]: string} = {};
     const user = this.auth.getUser();
     this.travels.forEach(item => {
       if (item.checked) {
         grantTravels[item._id] = user.data.travels[item._id].key;
-      }      
+      }
     });
 
-    if (!(await this.auth.createUser(this.password, this.newUsername, this.newPassword1, grantTravels))){
+    if (!(await this.auth.createUser(this.password, this.newUsername, this.newPassword1, grantTravels))) {
       this.unableToCreateUser = true;
       return;
     }
 
     this.unableToCreateUser = false;
-    
   }
 }

@@ -31,7 +31,7 @@ export class MainComponent implements OnInit {
     this.travelSelected = await this.db.GetSettingItem('SelectTravel');
     if (this.travelSelected) {
       this.travel = await this.db.GetTravel(this.travelSelected, this.auth.getUser());
-      if (this.travel){
+      if (this.travel) {
         return;
       }
     }

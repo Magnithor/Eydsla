@@ -46,7 +46,7 @@ export class BuyItemsComponent implements OnInit {
   }
 
   async getTravelId(id) {
-    if (!id || id === ""){
+    if (!id || id === '') {
       return;
     }
 

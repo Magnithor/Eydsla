@@ -40,10 +40,10 @@ export class TotalCategoryTableComponent {
   }
 
   async getTravelId(id) {
-    if (!id || id === ""){
+    if (!id || id === '') {
       return;
     }
-    
+
     this.travel = await this.db.GetTravel(id, this.auth.getUser());
     const data = await this.db.GetBuyItemByTravelId(id, this.auth.getUser());
     const result = {};
