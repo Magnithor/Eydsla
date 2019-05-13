@@ -8,8 +8,10 @@
     $userDb = GetUser($mng, $data->username);
     $userData = GetUserData($userDb, $data->password);
     $travelIds = array();
+    $travelIdsObjectId = array();
     foreach ($userData->travels as $key => $value) {
         array_push($travelIds, $key);
+        array_push($travelIdsObjectId, new MongoDB\BSON\ObjectId($key));
     }
    
     $result = new stdClass();
@@ -24,7 +26,7 @@
             array_push($and, ['lastUpdate'=>['$gt'=> new MongoDB\BSON\UTCDateTime(strtotime($maxDate)*1000)]]);        
         }
 
-        if (isset($filterData)) {
+        if (isset($filterData) && $filterData != null) {
             array_push($and, $filterData);
         }
 
@@ -38,7 +40,7 @@
         return $res->toArray();  
     }
 
-    function sync($mng, $table, $data, $time, $extrafilter) {
+    function sync($mng, $table, $data, $time, $extrafilter = null) {
         $result = array();
         $ids = array();
         $hashset = array();
@@ -74,7 +76,7 @@
 
 
     $result->t = $travelIds;
-    $result->travels = sync($mng, "travel", $data->travels, $time, ['_id' => ['$in' => $travelIds]]);
+    $result->travels = sync($mng, "travel", $data->travels, $time, ['_id' => ['$in' => $travelIdsObjectId]]);
     $result->buyItems = sync($mng, "buyItem", $data->buyItems, $time, ['travelId' => ['$in' => $travelIds]]);
     $result->users = sync($mng, "user", $data->users, $time);
 
